@@ -1,0 +1,83 @@
+---
+name: third_party_checks
+
+'on':
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  generate_and_upload_coverage_data:
+    name: generate_and_upload_coverage_data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate codecov.yml file
+        run: |
+          ./validate_codecov_yml.sh
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install --with dev
+
+      - name: Generate coverage data
+        run: |
+          ./generate_coverage_data.sh
+
+      - name: Fix code coverage paths for SonarCloud
+        # yamllint disable rule:line-length
+        run: |
+          cp coverage.xml coverage_for_sonarcloud.xml
+          sed -i 's/\/home\/runner\/work\/puzzle_generator\/puzzle_generator/\/github\/workspace/g' coverage_for_sonarcloud.xml
+        # yamllint enable rule:line-length
+
+      - name: SonarCloud Scan
+        if: "! github.event.pull_request.head.repo.fork "
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload coverage report to Codecov
+        if: "! github.event.pull_request.head.repo.fork "
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+
+      - name: Upload coverage report to Codecov (tokenless)
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name != github.repository
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+
+      - name: Upload coverage report to Codacy
+        if: "! github.event.pull_request.head.repo.fork "
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage.xml
+
+      - name: Upload coverage report as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage_report
+          path: |
+            coverage.xml
+            htmlcov
+          if-no-files-found: error
+          retention-days: 5
+...
