@@ -15,7 +15,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "8.3.1"
-pylint = "3.0.0"
+pylint = "3.2.6"
 flake8 = "7.0.0"
 flake8-pytest-style = "2.0.0"
 ruff = "0.5.2"
