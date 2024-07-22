@@ -23,12 +23,22 @@ def _run_puzzle(in_puzzle):
 
 
 def _create_str(in_modules, in_functions, in_encrypted_puzzle):
-    modules_str = "\n".join("import " + _ for _ in in_modules)
+    advertisement = """# generated with puzzle-generator
+#
+# https://pypi.org/project/puzzle-generator/
+# https://github.com/vil02/puzzle_generator
+"""
+    modules_str = "\n".join("import " + _ for _ in in_modules) + "\n"
     functions_str = "\n".join(inspect.getsource(_) for _ in in_functions)
     puzzle_data_str = f"_PUZZLE = {in_encrypted_puzzle}"
     call_str = "_run_puzzle(_PUZZLE)"
 
-    return "\n".join([modules_str, functions_str, puzzle_data_str, call_str])
+    return (
+        "\n".join(
+            [advertisement, modules_str, functions_str, puzzle_data_str, call_str]
+        )
+        + "\n"
+    )
 
 
 def create(in_puzzle, output_path: pathlib.Path) -> None:
