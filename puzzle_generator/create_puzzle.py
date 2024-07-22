@@ -1,5 +1,6 @@
 import pathlib
 import inspect
+import sys
 
 from .puzzle_data_encryption import decrypt_data, encrypt_data
 from . import simple_encryption_utils as seu
@@ -16,6 +17,7 @@ def _run_puzzle(in_puzzle):
         )
         if new_puzzle is None:
             print("This is a wrong answer. Try again!")
+            sys.exit(1)
         else:
             _run_puzzle(new_puzzle)
 
@@ -32,7 +34,7 @@ def _create_str(in_modules, in_functions, in_encrypted_puzzle):
 def create(in_puzzle, output_path: pathlib.Path) -> None:
     encrypted_puzzle = encrypt_data(in_puzzle, seu.encrypt_str)
 
-    needed_modules = ["hashlib", "itertools", "base64", "json"]
+    needed_modules = ["hashlib", "itertools", "base64", "json", "sys"]
 
     needed_functions = [
         seu.hash_bytes,
