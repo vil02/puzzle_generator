@@ -1,7 +1,20 @@
+import hashlib
+import itertools
 import pytest
 
 import puzzle_generator.puzzle_data_encryption as pde
 import puzzle_generator.simple_encryption_utils as seu
+
+_SOME_HASHES = [
+    hashlib.sha1,
+    hashlib.sha256,
+]
+
+
+def _get_encrypt_decrypt_pair(proc_hasher, signature_hasher):
+    return seu.get_encrypt(proc_hasher, signature_hasher), seu.get_decrypt(
+        proc_hasher, signature_hasher
+    )
 
 
 @pytest.mark.parametrize(
@@ -46,8 +59,12 @@ import puzzle_generator.simple_encryption_utils as seu
         },
     ],
 )
-def test_pde(in_puzzle):
-    encrypted_puzzle = pde.encrypt_data(in_puzzle, seu.encrypt_str)
+@pytest.mark.parametrize(
+    ("encrypt", "decrypt"),
+    [_get_encrypt_decrypt_pair(*_) for _ in itertools.product(_SOME_HASHES, repeat=2)],
+)
+def test_pde(in_puzzle, encrypt, decrypt):
+    encrypted_puzzle = pde.encrypt_data(in_puzzle, encrypt)
     tmp_puzzle_data = in_puzzle
     while "rest" in encrypted_puzzle:
         cur_pass = tmp_puzzle_data["pass"]
@@ -57,7 +74,7 @@ def test_pde(in_puzzle):
                 encrypted_puzzle["rest"],
                 encrypted_puzzle["hash"],
                 cur_pass + "!",
-                seu.decrypt_str,
+                decrypt,
             )
             is None
         )
@@ -65,7 +82,7 @@ def test_pde(in_puzzle):
             encrypted_puzzle["rest"],
             encrypted_puzzle["hash"],
             cur_pass,
-            seu.decrypt_str,
+            decrypt,
         )
         tmp_puzzle_data = tmp_puzzle_data["rest"]
     assert encrypted_puzzle == tmp_puzzle_data

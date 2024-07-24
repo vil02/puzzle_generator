@@ -1,4 +1,5 @@
 import pathlib
+import hashlib
 import subprocess
 import pytest
 
@@ -19,7 +20,7 @@ def fixture_puzzle():
 
 
 @pytest.fixture(name="puzzle_path")
-def fixture_puzzle_path(tmp_path) -> pathlib.Path:
+def fixture_puzzle_path(tmp_path: pathlib.Path) -> pathlib.Path:
     return tmp_path / "puzzle.py"
 
 
@@ -39,8 +40,17 @@ def _run_puzzle_file(
     )
 
 
-def test_all_good_answers(puzzle, puzzle_path: pathlib.Path) -> None:
-    cp.create(puzzle, puzzle_path)
+_CONFIGURATIONS = [
+    {},
+    {"proc_hasher": hashlib.md5},
+    {"proc_hasher": hashlib.sha1, "signature_hasher": hashlib.sha3_224},
+    {"signature_hasher": hashlib.blake2b},
+]
+
+
+@pytest.mark.parametrize("configuration", _CONFIGURATIONS)
+def test_all_good_answers(puzzle, puzzle_path: pathlib.Path, configuration) -> None:
+    cp.create(puzzle, puzzle_path, **configuration)
     res = _run_puzzle_file(puzzle_path, ["Answer 1", "Is this the final answer?"])
 
     assert res.returncode == 0
@@ -48,8 +58,9 @@ def test_all_good_answers(puzzle, puzzle_path: pathlib.Path) -> None:
     assert not res.stderr
 
 
-def test_second_answer_wrong(puzzle, puzzle_path: pathlib.Path) -> None:
-    cp.create(puzzle, puzzle_path)
+@pytest.mark.parametrize("configuration", _CONFIGURATIONS)
+def test_second_answer_wrong(puzzle, puzzle_path: pathlib.Path, configuration) -> None:
+    cp.create(puzzle, puzzle_path, **configuration)
     res = _run_puzzle_file(puzzle_path, ["Answer 1", "This is a wrong answer"])
     assert res.returncode == 1
     assert (
@@ -58,8 +69,9 @@ def test_second_answer_wrong(puzzle, puzzle_path: pathlib.Path) -> None:
     assert not res.stderr
 
 
-def test_first_answer_wrong(puzzle, puzzle_path: pathlib.Path) -> None:
-    cp.create(puzzle, puzzle_path)
+@pytest.mark.parametrize("configuration", _CONFIGURATIONS)
+def test_first_answer_wrong(puzzle, puzzle_path: pathlib.Path, configuration) -> None:
+    cp.create(puzzle, puzzle_path, **configuration)
     res = _run_puzzle_file(puzzle_path, ["This is a wrong answer."])
     assert res.returncode == 1
     assert res.stdout == "Question 1?\nThis is a wrong answer. Try again!\n"
