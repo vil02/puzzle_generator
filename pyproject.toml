@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "puzzle-generator"
-version = "0.1.4"
+version = "0.2.0"
 description = "Generates python code representing a puzzle"
 authors = ["piotr.idzik <vil02_puzzle_generator@10g.pl>"]
 readme = "./puzzle_generator/README.md"
