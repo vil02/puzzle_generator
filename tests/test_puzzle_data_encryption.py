@@ -4,6 +4,7 @@ import pytest
 
 import puzzle_generator.puzzle_data_encryption as pde
 import puzzle_generator.simple_encryption as se
+import puzzle_generator.spiced_simple_encryption as sse
 
 _SOME_HASHES = [
     hashlib.sha1,
@@ -11,10 +12,16 @@ _SOME_HASHES = [
 ]
 
 
-def _get_encrypt_decrypt_pair(proc_hasher, signature_hasher):
-    return se.get_encrypt(proc_hasher, signature_hasher), se.get_decrypt(
-        proc_hasher, signature_hasher
-    )
+_PROC_SPICES = [b"a"]
+_SIGNATURE_SPICES = [b"1", b"12"]
+
+
+def _get_simple_encrypt_decrypt_pair(*args):
+    return se.get_encrypt(*args), se.get_decrypt(*args)
+
+
+def _get_spiced_simple_encrypt_decrypt_pair(*args):
+    return sse.get_encrypt(*args), sse.get_decrypt(*args)
 
 
 @pytest.mark.parametrize(
@@ -61,7 +68,14 @@ def _get_encrypt_decrypt_pair(proc_hasher, signature_hasher):
 )
 @pytest.mark.parametrize(
     ("encrypt", "decrypt"),
-    [_get_encrypt_decrypt_pair(*_) for _ in itertools.product(_SOME_HASHES, repeat=2)],
+    [
+        _get_simple_encrypt_decrypt_pair(*_)
+        for _ in itertools.product(_SOME_HASHES, repeat=2)
+    ]
+    + [
+        _get_spiced_simple_encrypt_decrypt_pair(*_, _PROC_SPICES, _SIGNATURE_SPICES)
+        for _ in itertools.product(_SOME_HASHES, repeat=2)
+    ],
 )
 def test_pde(in_puzzle, encrypt, decrypt):
     encrypted_puzzle = pde.encrypt_data(in_puzzle, encrypt)
