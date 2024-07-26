@@ -3,9 +3,7 @@ import hashlib
 import itertools
 import pytest
 
-import puzzle_generator.simple_encryption as se
-import puzzle_generator.spiced_simple_encryption as sse
-
+import utils
 
 _STRS = [
     "",
@@ -30,24 +28,18 @@ _PROC_SPICES = [b"a", b"bb", b"ccc", b"dddd"]
 _SIGNATURE_SPICES = [b"XXX", b"YY", b"Z"]
 
 
-def _get_simple_encrypt_decrypt_pair(*args):
-    return se.get_encrypt(*args), se.get_decrypt(*args)
-
-
-def _get_spiced_simple_encrypt_decrypt_pair(*args):
-    return sse.get_encrypt(*args), sse.get_decrypt(*args)
-
-
 @pytest.mark.parametrize("in_str", _STRS)
 @pytest.mark.parametrize("in_pass", _STRS)
 @pytest.mark.parametrize(
     ("encrypt", "decrypt"),
     [
-        _get_simple_encrypt_decrypt_pair(*_)
+        utils.get_simple_encrypt_decrypt_pair(*_)
         for _ in itertools.product(_SOME_HASHES, repeat=2)
     ]
     + [
-        _get_spiced_simple_encrypt_decrypt_pair(*_, _PROC_SPICES, _SIGNATURE_SPICES)
+        utils.get_spiced_simple_encrypt_decrypt_pair(
+            *_, _PROC_SPICES, _SIGNATURE_SPICES
+        )
         for _ in itertools.product(_SOME_HASHES, repeat=2)
     ],
 )
