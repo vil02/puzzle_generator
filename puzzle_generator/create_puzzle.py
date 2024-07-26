@@ -5,6 +5,7 @@ import sys
 
 from .puzzle_data_encryption import decrypt_data, encrypt_data
 from . import simple_encryption_utils as seu
+from . import simple_encryption as se
 from . import bytestr_utils as bu
 
 
@@ -56,7 +57,7 @@ def create(in_puzzle, output_path: pathlib.Path, **kwargs) -> None:
     proc_hasher = kwargs.get("proc_hasher", hashlib.sha512)
     signature_hasher = kwargs.get("signature_hasher", hashlib.sha512)
     encrypted_puzzle = encrypt_data(
-        in_puzzle, seu.get_encrypt(proc_hasher, signature_hasher)
+        in_puzzle, se.get_encrypt(proc_hasher, signature_hasher)
     )
 
     needed_modules = ["hashlib", "itertools", "base64", "json", "sys", "typing"]
@@ -66,7 +67,7 @@ def create(in_puzzle, output_path: pathlib.Path, **kwargs) -> None:
         seu.int_to_bytes,
         seu.proc_bytes,
         bu.bytestr_to_bytes,
-        seu.get_decrypt,
+        se.get_decrypt,
         decrypt_data,
         _run_puzzle,
     ]

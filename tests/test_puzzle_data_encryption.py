@@ -3,7 +3,7 @@ import itertools
 import pytest
 
 import puzzle_generator.puzzle_data_encryption as pde
-import puzzle_generator.simple_encryption_utils as seu
+import puzzle_generator.simple_encryption as se
 
 _SOME_HASHES = [
     hashlib.sha1,
@@ -12,7 +12,7 @@ _SOME_HASHES = [
 
 
 def _get_encrypt_decrypt_pair(proc_hasher, signature_hasher):
-    return seu.get_encrypt(proc_hasher, signature_hasher), seu.get_decrypt(
+    return se.get_encrypt(proc_hasher, signature_hasher), se.get_decrypt(
         proc_hasher, signature_hasher
     )
 
