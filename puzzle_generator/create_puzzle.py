@@ -16,9 +16,7 @@ def _run_puzzle(in_puzzle, in_decrypt):
     print(in_puzzle["str"])
     if "rest" in in_puzzle:
         this_pass = input()
-        new_puzzle = decrypt_data(
-            in_puzzle["rest"], in_puzzle["hash"], this_pass, in_decrypt
-        )
+        new_puzzle = decrypt_data(in_puzzle["rest"], this_pass, in_decrypt)
         if new_puzzle is None:
             print("This is a wrong answer. Try again!")
             sys.exit(1)
@@ -75,6 +73,7 @@ class SimpleEncryptionConfigurator:
         return [
             seu.hash_bytes,
             seu.int_to_bytes,
+            seu.split_encrypted_and_signature,
             seu.proc_bytes,
             bu.bytestr_to_bytes,
             se.get_decrypt,
@@ -120,6 +119,7 @@ class SpicedSimpleEncryptionConfigurator:
         return [
             seu.hash_bytes,
             seu.int_to_bytes,
+            seu.split_encrypted_and_signature,
             seu.proc_bytes,
             bu.bytestr_to_bytes,
             sse.get_decrypt,

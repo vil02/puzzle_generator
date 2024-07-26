@@ -44,12 +44,10 @@ _SIGNATURE_SPICES = [b"XXX", b"YY", b"Z"]
     ],
 )
 def test_encryption_decryption(in_str, in_pass, encrypt, decrypt):
-    encrypted, reshash = encrypt(in_str, in_pass)
-    if in_str:
-        assert encrypted != in_str
-    else:
-        assert not encrypted
-    decrypted = decrypt(encrypted, in_pass, reshash)
+    encrypted = encrypt(in_str, in_pass)
+
+    assert encrypted != in_str
+    decrypted = decrypt(encrypted, in_pass)
     assert decrypted == in_str
     if in_str:
-        assert decrypt(encrypted, in_pass + "?", reshash) is None
+        assert decrypt(encrypted, in_pass + "?") is None

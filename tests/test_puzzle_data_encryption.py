@@ -79,7 +79,6 @@ def test_pde(in_puzzle, encrypt, decrypt):
         assert (
             pde.decrypt_data(
                 encrypted_puzzle["rest"],
-                encrypted_puzzle["hash"],
                 cur_pass + "!",
                 decrypt,
             )
@@ -87,7 +86,6 @@ def test_pde(in_puzzle, encrypt, decrypt):
         )
         encrypted_puzzle = pde.decrypt_data(
             encrypted_puzzle["rest"],
-            encrypted_puzzle["hash"],
             cur_pass,
             decrypt,
         )
