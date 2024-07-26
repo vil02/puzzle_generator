@@ -45,6 +45,20 @@ _CONFIGURATIONS = [
     {"proc_hasher": hashlib.md5},
     {"proc_hasher": hashlib.sha1, "signature_hasher": hashlib.sha3_224},
     {"signature_hasher": hashlib.blake2b},
+    {"encryption": "simple", "signature_hasher": hashlib.blake2b},
+    {
+        "encryption": "spiced",
+        "proc_hasher": hashlib.sha224,
+        "signature_hasher": hashlib.sha3_224,
+        "proc_spices": [b"\0"],
+    },
+    {
+        "encryption": "spiced",
+        "proc_hasher": hashlib.sha3_224,
+        "signature_hasher": hashlib.sha224,
+        "proc_spices": [b"\1"],
+        "signature_spices": [b"\2"],
+    },
 ]
 
 
