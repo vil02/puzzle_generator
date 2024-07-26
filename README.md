@@ -1,6 +1,6 @@
 # About `puzzle_generator`
 
-[![PyPI version](https://badge.fury.io/py/puzzle-generator.svg)](https://pypi.org/project/puzzle-generator/)
+[![PyPI version](https://badge.fury.io/py/puzzle-generator.svg)](https://badge.fury.io/py/puzzle-generator)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vil02_puzzle_generator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vil02_puzzle_generator)
 [![codecov](https://codecov.io/gh/vil02/puzzle_generator/graph/badge.svg?token=C4HUFJ9QJH)](https://codecov.io/gh/vil02/puzzle_generator)
 [![CodeFactor](https://www.codefactor.io/repository/github/vil02/puzzle_generator/badge)](https://www.codefactor.io/repository/github/vil02/puzzle_generator)
@@ -9,7 +9,7 @@
 Basic functionality of [`puzzle_generator`](./puzzle_generator) is to generate
 a single python file representing a puzzle or quiz.
 The answers and the upcoming questions are encrypted.
-The generated file does not have eny external dependencies.
+The generated file does not have any external dependencies.
 
 ## Getting started
 
