@@ -1,8 +1,9 @@
 import itertools
+import typing
 
 
-def hash_bytes(in_bytes: bytes, in_hasher) -> str:
-    return str(in_hasher(in_bytes).hexdigest())
+def hash_bytes(in_bytes: bytes, in_hasher) -> bytes:
+    return in_hasher(in_bytes).digest()
 
 
 def int_to_bytes(in_val: int) -> bytes:
@@ -16,3 +17,16 @@ def proc_bytes(in_bytes: bytes, in_key: bytes, in_hasher) -> bytes:
         for block_num in itertools.count(0)
     )
     return bytes(_d ^ _k for (_d, _k) in zip(in_bytes, key_bytes))
+
+
+def merge_encrypted_and_signature(in_encrypted: bytes, in_signature: bytes) -> bytes:
+    return in_encrypted + in_signature
+
+
+def split_encrypted_and_signature(
+    in_bytes: bytes, signature_size: int
+) -> typing.Tuple[bytes, bytes]:
+    assert len(in_bytes) >= signature_size
+    encrypted = in_bytes[:-signature_size]
+    signature = in_bytes[-signature_size:]
+    return encrypted, signature
