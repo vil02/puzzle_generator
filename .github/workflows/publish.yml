@@ -1,5 +1,5 @@
 ---
-name: python_test
+name: publish
 
 'on':
   workflow_dispatch:
@@ -8,7 +8,7 @@ name: python_test
       - created
 
 jobs:
-  python_test:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
