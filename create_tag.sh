@@ -16,11 +16,12 @@ if [[ -z "${current_version}" ]]; then
     exit 1
 fi
 
-tag_name="v$current_version"
+tag_name="v${current_version}"
 readonly tag_name
-if [[ "$(git tag -l "${tag_name}")" ]]; then
+if git ls-remote --tags origin | grep "refs/tags/${tag_name}"; then
     echo "Tag ${tag_name} already exists."
-else
-    git tag "${tag_name}"
-    git push origin tag "${tag_name}"
+    exit 0
 fi
+
+git tag "${tag_name}"
+git push origin tag "${tag_name}"
