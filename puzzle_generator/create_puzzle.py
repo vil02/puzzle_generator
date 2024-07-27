@@ -12,16 +12,16 @@ from . import spiced_simple_encryption as sse
 from . import bytestr_utils as bu
 
 
-def _run_puzzle(in_puzzle, in_decrypt):
+def run_puzzle(in_puzzle, in_decrypt, get_answer):
     print(in_puzzle["str"])
     if "rest" in in_puzzle:
-        this_pass = input()
+        this_pass = get_answer()
         new_puzzle = decrypt_data(in_puzzle["rest"], this_pass, in_decrypt)
         if new_puzzle is None:
             print("This is a wrong answer. Try again!")
             sys.exit(1)
         else:
-            _run_puzzle(new_puzzle, in_decrypt)
+            run_puzzle(new_puzzle, in_decrypt, get_answer)
 
 
 def _create_str(in_modules, in_objects, in_encrypted_puzzle, constants_str: str) -> str:
@@ -33,7 +33,7 @@ def _create_str(in_modules, in_objects, in_encrypted_puzzle, constants_str: str)
     modules_str = "\n".join("import " + _ for _ in in_modules) + "\n"
     objects_str = "\n".join(inspect.getsource(_) for _ in in_objects)
     puzzle_data_str = f"_PUZZLE = {in_encrypted_puzzle}"
-    call_str = "_run_puzzle(_PUZZLE, _DECRYPT)"
+    call_str = "run_puzzle(_PUZZLE, _DECRYPT, input)"
 
     return (
         "\n".join(
@@ -78,7 +78,7 @@ class SimpleEncryptionConfigurator:
             bu.bytestr_to_bytes,
             se.get_decrypt,
             decrypt_data,
-            _run_puzzle,
+            run_puzzle,
         ]
 
     def get_constants_str(
@@ -124,7 +124,7 @@ class SpicedSimpleEncryptionConfigurator:
             bu.bytestr_to_bytes,
             sse.get_decrypt,
             decrypt_data,
-            _run_puzzle,
+            run_puzzle,
         ]
 
     def get_constants_str(
