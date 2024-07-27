@@ -8,7 +8,8 @@
 
 Basic functionality of [`puzzle_generator`](./puzzle_generator) is to generate
 a single python file representing a puzzle or quiz.
-The answers and the upcoming questions are encrypted.
+The upcoming questions are stored in an encrypted form,
+so it is _difficult_ to read them before providing correct answers.
 The generated file does not have any external dependencies.
 
 ## Getting started
