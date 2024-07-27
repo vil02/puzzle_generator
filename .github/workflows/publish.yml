@@ -1,0 +1,30 @@
+---
+name: python_test
+
+'on':
+  workflow_dispatch:
+  release:
+    types:
+      - created
+
+jobs:
+  python_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Set up Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Publish to PyPi
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish --build
+...
