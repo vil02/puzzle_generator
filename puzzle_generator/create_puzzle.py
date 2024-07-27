@@ -28,7 +28,7 @@ def _create_str(in_modules, in_objects, in_encrypted_puzzle, constants_str: str)
     advertisement = """# generated with puzzle-generator
 #
 # https://pypi.org/project/puzzle-generator/
-# https://github.com/vil02/puzzle_generator
+# https://github.com/vil02/puzzle_generator/
 """
     modules_str = "\n".join("import " + _ for _ in in_modules) + "\n"
     objects_str = "\n".join(inspect.getsource(_) for _ in in_objects)
