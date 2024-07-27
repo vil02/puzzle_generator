@@ -1,5 +1,3 @@
-import pathlib
-
 from puzzle_generator.create_puzzle import create
 
 _PUZZLE = {
@@ -12,4 +10,4 @@ _PUZZLE = {
     },
 }
 
-create(_PUZZLE, pathlib.Path("example_puzzle.py"))
+print(create(_PUZZLE))

@@ -1,4 +1,3 @@
-import pathlib
 import hashlib
 import inspect
 import sys
@@ -155,7 +154,7 @@ def _get_configurator(**kwargs):
     return configurators[encryption](**kwargs)
 
 
-def create(in_puzzle, output_path: pathlib.Path, **kwargs) -> None:
+def create(in_puzzle, **kwargs) -> str:
     configurator = _get_configurator(**kwargs)
 
     encrypted_puzzle = encrypt_data(in_puzzle, configurator.get_encrypt())
@@ -164,7 +163,4 @@ def create(in_puzzle, output_path: pathlib.Path, **kwargs) -> None:
     needed_objects = configurator.get_needed_objects()
     constants_str = configurator.get_constants_str()
 
-    with open(output_path, "w", encoding="utf-8") as res_file:
-        res_file.write(
-            _create_str(needed_modules, needed_objects, encrypted_puzzle, constants_str)
-        )
+    return _create_str(needed_modules, needed_objects, encrypted_puzzle, constants_str)
