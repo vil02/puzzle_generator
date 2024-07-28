@@ -23,26 +23,26 @@ def run_puzzle(in_puzzle, in_decrypt, get_answer):
             run_puzzle(new_puzzle, in_decrypt, get_answer)
 
 
-def _create_str(in_modules, in_objects, in_encrypted_puzzle, constants_str: str) -> str:
+def _create_str(in_modules, in_objects, in_encrypted_puzzle, constants: str) -> str:
     advertisement = """# generated with puzzle-generator
 #
 # https://pypi.org/project/puzzle-generator/
 # https://github.com/vil02/puzzle_generator/
 """
-    modules_str = "\n".join("import " + _ for _ in in_modules) + "\n"
-    objects_str = "\n".join(inspect.getsource(_) for _ in in_objects)
-    puzzle_data_str = f"_PUZZLE = {in_encrypted_puzzle}"
-    call_str = "run_puzzle(_PUZZLE, _DECRYPT, input)"
+    modules: str = "\n".join("import " + _ for _ in in_modules) + "\n"
+    objects: str = "\n".join(inspect.getsource(_) for _ in in_objects)
+    puzzle_data: str = f"_PUZZLE = {in_encrypted_puzzle}"
+    call: str = "run_puzzle(_PUZZLE, _DECRYPT, input)"
 
     return (
         "\n".join(
             [
                 advertisement,
-                modules_str,
-                objects_str,
-                puzzle_data_str,
-                constants_str,
-                call_str,
+                modules,
+                objects,
+                puzzle_data,
+                constants,
+                call,
             ]
         )
         + "\n"
@@ -95,8 +95,8 @@ def _list_of_bytes_to_str(in_list: typing.List[bytes]) -> str:
 
 
 def _list_of_bytes_to_codestr(in_list: typing.List[bytes]) -> str:
-    raw_str = _list_of_bytes_to_str(in_list)
-    return f"[bytestr_to_bytes(_) for _ in {raw_str}]"
+    raw: str = _list_of_bytes_to_str(in_list)
+    return f"[bytestr_to_bytes(_) for _ in {raw}]"
 
 
 class SpicedSimpleEncryptionConfigurator:
@@ -129,20 +129,20 @@ class SpicedSimpleEncryptionConfigurator:
     def get_constants_str(
         self,
     ) -> str:
-        proc_spices_str = (
+        proc_spices: str = (
             f"_PROC_SPICES = {_list_of_bytes_to_codestr(self._proc_spices)}"
         )
-        signature_spices_str = (
+        signature_spices: str = (
             f"_SIGNATURE_SPICES = {_list_of_bytes_to_codestr(self._signature_spices)}"
         )
-        decrypt_str = (
+        decrypt: str = (
             "_DECRYPT = get_decrypt("
             f"{_get_hasher_name(self._proc_hasher)}, "
             f"{_get_hasher_name(self._signature_hasher)}, "
             "_PROC_SPICES, "
             "_SIGNATURE_SPICES)"
         )
-        return "\n".join([proc_spices_str, signature_spices_str, decrypt_str])
+        return "\n".join([proc_spices, signature_spices, decrypt])
 
 
 def _get_configurator(**kwargs):
@@ -161,6 +161,6 @@ def create(in_puzzle, **kwargs) -> str:
     needed_modules = ["hashlib", "itertools", "base64", "json", "sys", "typing"]
 
     needed_objects = configurator.get_needed_objects()
-    constants_str = configurator.get_constants_str()
+    constants: str = configurator.get_constants_str()
 
-    return _create_str(needed_modules, needed_objects, encrypted_puzzle, constants_str)
+    return _create_str(needed_modules, needed_objects, encrypted_puzzle, constants)

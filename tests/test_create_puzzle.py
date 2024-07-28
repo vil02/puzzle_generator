@@ -74,10 +74,10 @@ def _run_puzzle_file(
 
 
 def _run_puzzle_str(
-    in_puzzle_str: str, answers: list[str], in_puzzle_path: pathlib.Path
+    in_puzzle: str, answers: list[str], in_puzzle_path: pathlib.Path
 ) -> subprocess.CompletedProcess[str]:
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
-        puzzle_file.write(in_puzzle_str)
+        puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
 
 
@@ -109,8 +109,8 @@ def test_all_good_answers(
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
-    puzzle_str = cp.create(puzzle_tc.puzzle, **configuration)
-    res = _run_puzzle_str(puzzle_str, puzzle_tc.correct.input, puzzle_path)
+    puzzle: str = cp.create(puzzle_tc.puzzle, **configuration)
+    res = _run_puzzle_str(puzzle, puzzle_tc.correct.input, puzzle_path)
 
     assert res.returncode == 0
     assert res.stdout == puzzle_tc.correct.output
@@ -124,8 +124,8 @@ def test_wrong_answers(
     configuration,
 ) -> None:
     for cur_wrong in puzzle_tc.wrong:
-        puzzle_str = cp.create(puzzle_tc.puzzle, **configuration)
-        res = _run_puzzle_str(puzzle_str, cur_wrong.input, puzzle_path)
+        puzzle: str = cp.create(puzzle_tc.puzzle, **configuration)
+        res = _run_puzzle_str(puzzle, cur_wrong.input, puzzle_path)
         assert res.returncode == 1
         assert res.stdout == cur_wrong.output
         assert not res.stderr
