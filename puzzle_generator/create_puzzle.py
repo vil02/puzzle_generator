@@ -1,7 +1,20 @@
 import inspect
+import typing
 
 from .puzzle_data_encryption import encrypt_data
 from .configurators import configurators
+
+
+def question_answer_list_to_dict(in_list: typing.List[str]):
+    if len(in_list) % 2 == 0:
+        raise ValueError("The question/answer list must have odd length.")
+    if len(in_list) == 1:
+        return {"str": in_list[0]}
+    return {
+        "str": in_list[0],
+        "pass": in_list[1],
+        "rest": question_answer_list_to_dict(in_list[2:]),
+    }
 
 
 def _create_str(in_encrypted_puzzle, configurator) -> str:
