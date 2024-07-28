@@ -1,8 +1,11 @@
+import typing
+
 from ...encryption_algorithms import bytestr_utils as bu
 from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import simple as se
 from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
+from .common import MODULES
 from ...run_puzzle import run_puzzle
 
 
@@ -10,6 +13,9 @@ class Simple:
     def __init__(self, **kwargs):
         self._proc_hasher = kwargs.get("proc_hasher", cc.DefaultHasher)
         self._signature_hasher = kwargs.get("signature_hasher", cc.DefaultHasher)
+
+    def get_modules(self) -> typing.List[str]:
+        return MODULES
 
     def get_encrypt(self):
         return se.get_encrypt(self._proc_hasher, self._signature_hasher)
