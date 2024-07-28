@@ -2,8 +2,8 @@ import hashlib
 import itertools
 import pytest
 
-import utils
 import puzzle_generator.puzzle_data_encryption as pde
+from . import utils
 
 _SOME_HASHES = [
     hashlib.sha1,

@@ -1,13 +1,13 @@
 import typing
 
 
-from .simple_encryption_utils import (
+from .common import (
     proc_bytes,
     hash_bytes,
     merge_encrypted_and_signature,
     split_encrypted_and_signature,
 )
-from .bytestr_utils import bytes_to_bytestr, bytestr_to_bytes
+from ..bytestr_utils import bytes_to_bytestr, bytestr_to_bytes
 
 
 def get_encrypt(proc_hasher, signature_hasher) -> typing.Callable[[str, str], str]:

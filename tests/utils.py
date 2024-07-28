@@ -1,5 +1,5 @@
-import puzzle_generator.simple_encryption as se
-import puzzle_generator.spiced_simple_encryption as sse
+import puzzle_generator.encryption_algorithms.simple.simple as se
+import puzzle_generator.encryption_algorithms.simple.spiced as sse
 
 
 def get_simple_encrypt_decrypt_pair(*args):

@@ -6,9 +6,11 @@ import itertools
 import collections
 import pytest
 
-import utils
 import puzzle_generator.create_puzzle as cp
+import puzzle_generator.run_puzzle as rp
 import puzzle_generator.puzzle_data_encryption as pde
+
+from . import utils
 
 _InputOutput = collections.namedtuple("_InputOutput", ["input", "output"])
 
@@ -175,7 +177,7 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
 @pytest.mark.parametrize(("encrypt", "decrypt"), _ENCRYPT_DECRYPT_PAIRS)
 def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
     encrypted_puzzle = pde.encrypt_data(puzzle_tc.puzzle, encrypt)
-    cp.run_puzzle(
+    rp.run_puzzle(
         encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.correct.input)
     )
     captured = capsys.readouterr()
@@ -187,7 +189,7 @@ def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
     for cur_wrong in puzzle_tc.wrong:
         encrypted_puzzle = pde.encrypt_data(puzzle_tc.puzzle, encrypt)
         with pytest.raises(SystemExit) as exc_info:
-            cp.run_puzzle(
+            rp.run_puzzle(
                 encrypted_puzzle,
                 decrypt,
                 _get_input_simulator(cur_wrong.input),
