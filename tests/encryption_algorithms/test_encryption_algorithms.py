@@ -3,7 +3,7 @@ import hashlib
 import itertools
 import pytest
 
-import utils
+from .. import utils
 
 _STRS = [
     "",
