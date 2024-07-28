@@ -6,6 +6,7 @@ from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import spiced as sse
 from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
+from .common import MODULES
 from ...run_puzzle import run_puzzle
 
 
@@ -28,6 +29,9 @@ class Spiced:
         self._signature_hasher = kwargs.get("signature_hasher", cc.DefaultHasher)
         self._proc_spices = kwargs.get("proc_spices", _get_some_spices())
         self._signature_spices = kwargs.get("signature_spices", _get_some_spices())
+
+    def get_modules(self) -> typing.List[str]:
+        return MODULES
 
     def get_encrypt(self):
         return sse.get_encrypt(
