@@ -17,7 +17,7 @@ _InputOutput = collections.namedtuple("_InputOutput", ["input", "output"])
 _PuzzleTestCase = collections.namedtuple(
     "_PuzzleTestCase",
     [
-        "puzzle",
+        "qa_list",
         "correct",
         "wrong",
     ],
@@ -26,17 +26,15 @@ _PuzzleTestCase = collections.namedtuple(
 
 @pytest.fixture(name="puzzle_tc")
 def fixture_puzzle_tc():
-    puzzle = {
-        "str": "Question 1?",
-        "pass": "Answer 1",
-        "rest": {
-            "str": "Question 2?",
-            "pass": "Is this the final answer?",
-            "rest": {"str": "Congratulations!"},
-        },
-    }
+    qa_list = [
+        "Question 1?",
+        "Answer 1",
+        "Question 2?",
+        "Is this the final answer?",
+        "Congratulations!",
+    ]
     return _PuzzleTestCase(
-        puzzle=puzzle,
+        qa_list=qa_list,
         correct=_InputOutput(
             input=["Answer 1", "Is this the final answer?"],
             output="Question 1?\nQuestion 2?\nCongratulations!\n",
@@ -111,7 +109,7 @@ def test_all_good_answers(
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
-    puzzle: str = cp.create(puzzle_tc.puzzle, **configuration)
+    puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
     res = _run_puzzle_str(puzzle, puzzle_tc.correct.input, puzzle_path)
 
     assert res.returncode == 0
@@ -126,7 +124,7 @@ def test_wrong_answers(
     configuration,
 ) -> None:
     for cur_wrong in puzzle_tc.wrong:
-        puzzle: str = cp.create(puzzle_tc.puzzle, **configuration)
+        puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
         res = _run_puzzle_str(puzzle, cur_wrong.input, puzzle_path)
         assert res.returncode == 1
         assert res.stdout == cur_wrong.output
@@ -176,7 +174,9 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), _ENCRYPT_DECRYPT_PAIRS)
 def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
-    encrypted_puzzle = pde.encrypt_data(puzzle_tc.puzzle, encrypt)
+    encrypted_puzzle = pde.encrypt_data(
+        cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+    )
     rp.run_puzzle(
         encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.correct.input)
     )
@@ -187,7 +187,9 @@ def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> Non
 @pytest.mark.parametrize(("encrypt", "decrypt"), _ENCRYPT_DECRYPT_PAIRS)
 def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
     for cur_wrong in puzzle_tc.wrong:
-        encrypted_puzzle = pde.encrypt_data(puzzle_tc.puzzle, encrypt)
+        encrypted_puzzle = pde.encrypt_data(
+            cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+        )
         with pytest.raises(SystemExit) as exc_info:
             rp.run_puzzle(
                 encrypted_puzzle,
@@ -201,7 +203,7 @@ def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
 
 
 @pytest.mark.parametrize(
-    ("in_list", "expected"),
+    ("qa_list", "expected"),
     [
         (["Congratulations!"], {"str": "Congratulations!"}),
         (
@@ -238,12 +240,12 @@ def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
         ),
     ],
 )
-def test_question_answer_list_to_dict(in_list, expected):
-    assert cp.question_answer_list_to_dict(in_list) == expected
+def test_question_answer_list_to_dict(qa_list, expected):
+    assert cp.question_answer_list_to_dict(qa_list) == expected
 
 
 @pytest.mark.parametrize(
-    "in_wrong_list",
+    "wrong_qa_list",
     [
         [],
         ["Question", "Answer"],
@@ -251,9 +253,9 @@ def test_question_answer_list_to_dict(in_list, expected):
     ],
 )
 def test_question_answer_list_to_dict_raises_when_input_list_has_even_length(
-    in_wrong_list,
+    wrong_qa_list,
 ):
     with pytest.raises(
         ValueError, match="The question/answer list must have odd length."
     ):
-        cp.question_answer_list_to_dict(in_wrong_list)
+        cp.question_answer_list_to_dict(wrong_qa_list)
