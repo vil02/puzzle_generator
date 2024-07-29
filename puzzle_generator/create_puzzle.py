@@ -3,6 +3,7 @@ import typing
 
 from .puzzle_data_encryption import encrypt_data
 from .configurators import configurators
+from .encryption_algorithms import bytestr_utils
 
 
 def question_answer_list_to_dict(qa_list: typing.List[str]):
@@ -27,7 +28,9 @@ def _create_str(in_encrypted_puzzle, configurator) -> str:
     objects: str = "\n".join(
         inspect.getsource(_) for _ in configurator.get_needed_objects()
     )
-    puzzle_data: str = f"_PUZZLE = {in_encrypted_puzzle}"
+    question = in_encrypted_puzzle[0]
+    rest_str = bytestr_utils.bytes_to_bytestr(in_encrypted_puzzle[1])
+    puzzle_data: str = f'_PUZZLE = ("{question}", bytestr_to_bytes("{rest_str}"))'
     call: str = "run_puzzle(_PUZZLE, _DECRYPT, input)"
 
     return (
@@ -35,6 +38,7 @@ def _create_str(in_encrypted_puzzle, configurator) -> str:
             [
                 advertisement,
                 modules,
+                'BYTEORDER: typing.Literal["little", "big"] = "little"',
                 objects,
                 puzzle_data,
                 configurator.get_constants_str(),

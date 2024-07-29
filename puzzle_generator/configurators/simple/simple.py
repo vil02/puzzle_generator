@@ -3,10 +3,11 @@ import typing
 from ...encryption_algorithms import bytestr_utils as bu
 from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import simple as se
-from ...puzzle_data_encryption import decrypt_data, decrypted_data_to_list
+from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
 from .common import MODULES
 from ...run_puzzle import run_puzzle
+from ...bytes_utils import bytes_to_int, split
 
 
 class Simple:
@@ -28,7 +29,8 @@ class Simple:
             common.proc_bytes,
             bu.bytestr_to_bytes,
             se.get_decrypt,
-            decrypted_data_to_list,
+            bytes_to_int,
+            split,
             decrypt_data,
             run_puzzle,
         ]
