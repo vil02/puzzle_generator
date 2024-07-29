@@ -36,10 +36,6 @@ jobs:
         run: |
           poetry install --with dev
 
-      - name: Lint with ruff
-        run: |
-          poetry run ruff check
-
       - name: Run liter
         run: |
           ./check_all_python_files.sh
