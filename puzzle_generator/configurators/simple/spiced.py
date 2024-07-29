@@ -4,7 +4,7 @@ import typing
 from ...encryption_algorithms import bytestr_utils as bu
 from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import spiced as sse
-from ...puzzle_data_encryption import decrypt_data
+from ...puzzle_data_encryption import decrypt_data, decrypted_data_to_list
 from .. import common as cc
 from .common import MODULES
 from ...run_puzzle import run_puzzle
@@ -49,6 +49,7 @@ class Spiced:
             common.proc_bytes,
             bu.bytestr_to_bytes,
             sse.get_decrypt,
+            decrypted_data_to_list,
             decrypt_data,
             run_puzzle,
         ]

@@ -1,1 +1,1 @@
-MODULES = ["hashlib", "itertools", "base64", "json", "sys", "typing"]
+MODULES = ["hashlib", "itertools", "base64", "sys", "typing"]
