@@ -46,7 +46,7 @@ class Spiced:
         return [
             common.hash_bytes,
             common.int_to_bytes,
-            common.split_encrypted_and_signature,
+            common.split_data_and_signature,
             common.proc_bytes,
             bu.bytestr_to_bytes,
             sse.get_decrypt,

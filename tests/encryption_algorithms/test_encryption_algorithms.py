@@ -38,5 +38,5 @@ def test_encryption_decryption(in_bytes, in_pass, encrypt, decrypt):
     assert encrypted != in_bytes
     decrypted = decrypt(encrypted, in_pass)
     assert decrypted == in_bytes
-    if len(in_bytes) > 1:  # there were some hash-collisions, when len(in_bytes) == 1
+    if in_bytes:
         assert decrypt(encrypted, in_pass + b"?") is None
