@@ -3,7 +3,7 @@ import typing
 
 from .puzzle_data_encryption import encrypt_data
 from .configurators import configurators
-from .encryption_algorithms import bytestr_utils
+from . import bytestr_utils
 
 
 def question_answer_list_to_dict(qa_list: typing.List[str]):

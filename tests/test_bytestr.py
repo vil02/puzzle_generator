@@ -1,7 +1,7 @@
 import pytest
 
-import puzzle_generator.encryption_algorithms.bytestr_utils as bu
-from .. import utils
+import puzzle_generator.bytestr_utils as bu
+from . import utils
 
 
 @pytest.mark.parametrize(

@@ -1,7 +1,7 @@
 import secrets
 import typing
 
-from ...encryption_algorithms import bytestr_utils as bu
+from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import spiced as sse
 from ...puzzle_data_encryption import decrypt_data
