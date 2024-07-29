@@ -73,21 +73,21 @@ _SIGNATURE_SPICES = [b"1", b"12"]
 def test_pde(in_puzzle, encrypt, decrypt):
     encrypted_puzzle = pde.encrypt_data(in_puzzle, encrypt)
     tmp_puzzle_data = in_puzzle
-    while "rest" in encrypted_puzzle:
+    while len(encrypted_puzzle[1]) > 0:
         cur_pass = tmp_puzzle_data["pass"]
-        assert tmp_puzzle_data["str"] == encrypted_puzzle["str"]
+        assert tmp_puzzle_data["str"] == encrypted_puzzle[0]
         assert (
             pde.decrypt_data(
-                encrypted_puzzle["rest"],
+                encrypted_puzzle[1],
                 cur_pass + "!",
                 decrypt,
             )
             is None
         )
         encrypted_puzzle = pde.decrypt_data(
-            encrypted_puzzle["rest"],
+            encrypted_puzzle[1],
             cur_pass,
             decrypt,
         )
         tmp_puzzle_data = tmp_puzzle_data["rest"]
-    assert encrypted_puzzle == tmp_puzzle_data
+    assert encrypted_puzzle[0] == tmp_puzzle_data["str"]

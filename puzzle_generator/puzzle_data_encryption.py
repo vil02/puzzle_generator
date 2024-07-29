@@ -1,19 +1,25 @@
-import json
 import typing
 
+from .bytes_utils import join, split
 
-def encrypt_data(in_data, in_encrypt: typing.Callable[[str, str], str]):
+
+def encrypt_data(
+    in_data, in_encrypt: typing.Callable[[bytes, bytes], bytes]
+) -> typing.Tuple[str, bytes]:
     if list(in_data.keys()) == ["str"]:
-        return {"str": in_data["str"]}
-    rest: str = json.dumps(encrypt_data(in_data["rest"], in_encrypt))
-    encrypted: str = in_encrypt(rest, in_data["pass"])
-    return {"str": in_data["str"], "rest": encrypted}
+        return in_data["str"], bytes()
+    tmp = encrypt_data(in_data["rest"], in_encrypt)
+    rest = join(tmp[0], tmp[1])
+    encrypted = in_encrypt(rest, in_data["pass"].encode())
+    return in_data["str"], encrypted
 
 
 def decrypt_data(
-    in_rest: str, in_pass: str, in_decrypt: typing.Callable[[str, str], str | None]
-):
-    rest_str = in_decrypt(in_rest, in_pass)
-    if rest_str is None:
+    in_rest: bytes,
+    in_pass: str,
+    in_decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> None | typing.Tuple[str, bytes]:
+    res = in_decrypt(in_rest, in_pass.encode())
+    if res is None:
         return None
-    return json.loads(rest_str)
+    return split(res)

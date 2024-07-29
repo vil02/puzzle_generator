@@ -7,6 +7,7 @@ from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
 from .common import MODULES
 from ...run_puzzle import run_puzzle
+from ...bytes_utils import bytes_to_int, split
 
 
 class Simple:
@@ -28,6 +29,8 @@ class Simple:
             common.proc_bytes,
             bu.bytestr_to_bytes,
             se.get_decrypt,
+            bytes_to_int,
+            split,
             decrypt_data,
             run_puzzle,
         ]
