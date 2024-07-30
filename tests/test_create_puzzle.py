@@ -4,6 +4,7 @@ import subprocess
 import typing
 import itertools
 import collections
+import black
 import pytest
 
 import puzzle_generator.create_puzzle as cp
@@ -76,6 +77,7 @@ def _run_puzzle_file(
 def _run_puzzle_str(
     in_puzzle: str, answers: list[str], in_puzzle_path: pathlib.Path
 ) -> subprocess.CompletedProcess[str]:
+    assert in_puzzle == black.format_str(in_puzzle, mode=black.FileMode())
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)

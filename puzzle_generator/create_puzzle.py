@@ -1,6 +1,8 @@
 import inspect
 import typing
 
+import black
+
 from .puzzle_data_encryption import encrypt_data
 from .configurators import configurators
 from . import bytestr_utils
@@ -53,4 +55,5 @@ def create(qa_list: typing.List[str], **kwargs) -> str:
     puzzle = question_answer_list_to_dict(qa_list)
     configurator = configurators.get_configurator(**kwargs)
     encrypted_puzzle = encrypt_data(puzzle, configurator.get_encrypt())
-    return _create_str(encrypted_puzzle, configurator)
+    res = _create_str(encrypted_puzzle, configurator)
+    return black.format_str(res, mode=black.FileMode())
