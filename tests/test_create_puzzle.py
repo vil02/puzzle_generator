@@ -1,6 +1,6 @@
 import pathlib
 import hashlib
-import subprocess
+import subprocess  # nosec B404
 import typing
 import itertools
 import collections
@@ -64,7 +64,7 @@ def _run_puzzle_file(
     assert in_puzzle_path.is_file()
     puzzle_dir = in_puzzle_path.parent
     puzzle_name = in_puzzle_path.name
-    return subprocess.run(
+    return subprocess.run(  # nosec B603, B607
         ["python3", puzzle_name],
         cwd=puzzle_dir,
         input="\n".join(answers),

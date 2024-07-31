@@ -15,8 +15,8 @@ def get_encrypt(
     proc_spices: typing.List[bytes],
     signature_spices: typing.List[bytes],
 ) -> typing.Callable[[bytes, bytes], bytes]:
-    assert proc_spices
-    assert signature_spices
+    assert proc_spices  # nosec B101
+    assert signature_spices  # nosec B101
 
     def _encrypt(in_bytes: bytes, in_pass: bytes) -> bytes:
         signature_spice = secrets.choice(signature_spices)
@@ -34,8 +34,8 @@ def get_decrypt(
     proc_spices: typing.List[bytes],
     signature_spices: typing.List[bytes],
 ) -> typing.Callable[[bytes, bytes], bytes | None]:
-    assert proc_spices
-    assert signature_spices
+    assert proc_spices  # nosec B101
+    assert signature_spices  # nosec B101
 
     def _decrypt(in_bytes: bytes, in_pass: bytes) -> bytes | None:
         for proc_spice in proc_spices:
