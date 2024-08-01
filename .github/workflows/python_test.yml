@@ -70,7 +70,6 @@ jobs:
           poetry install
 
       - name: Run examples
-        working-directory: ./examples/
         run: |
-          find . -name "*.py" -exec poetry run python3 {} +
+          ./run_all_examples.sh
 ...
