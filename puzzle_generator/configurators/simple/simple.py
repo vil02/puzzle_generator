@@ -5,28 +5,28 @@ from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import simple as se
 from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
-from .common import MODULES
+from .common import MODULES, scrypt_params, scrypt_params_to_code_str
 from ...run_puzzle import run_puzzle
 from ...bytes_utils import bytes_to_int, split
 
 
 class Simple:
     def __init__(self, **kwargs):
-        self._proc_hasher = kwargs.get("proc_hasher", cc.DefaultHasher)
+        self._scrypt_params = scrypt_params(**kwargs)
         self._signature_hasher = kwargs.get("signature_hasher", cc.DefaultHasher)
 
     def get_modules(self) -> typing.List[str]:
         return MODULES
 
     def get_encrypt(self):
-        return se.get_encrypt(self._proc_hasher, self._signature_hasher)
+        return se.get_encrypt(self._signature_hasher, self._scrypt_params)
 
     def get_needed_objects(self):
         return [
             common.hash_bytes,
-            common.int_to_bytes,
             common.split_data_and_signature,
-            common.proc_bytes,
+            common.derive_key,
+            common.xor_bytes,
             bu.bytestr_to_bytes,
             se.get_decrypt,
             bytes_to_int,
@@ -38,8 +38,10 @@ class Simple:
     def get_constants_str(
         self,
     ) -> str:
-        return (
+        _scrypt_params = scrypt_params_to_code_str(**self._scrypt_params)
+        decrypt: str = (
             "_DECRYPT = get_decrypt("
-            f"{cc.get_hasher_name(self._proc_hasher)}, "
-            f"{cc.get_hasher_name(self._signature_hasher)})"
+            f"{cc.get_hasher_name(self._signature_hasher)}, "
+            "_SCRYPT_PARAMS)"
         )
+        return "\n".join([_scrypt_params, decrypt])

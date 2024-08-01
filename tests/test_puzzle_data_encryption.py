@@ -15,6 +15,12 @@ _PROC_SPICES = [b"a"]
 _SIGNATURE_SPICES = [b"1", b"12"]
 
 
+_SOME_SCRYPT_PARAMS = [
+    {"salt": b"some_bad_salt_0", "n": 8, "r": 5, "p": 1},
+    {"salt": b"some_other_bad_salt_1", "n": 4, "r": 2, "p": 1},
+]
+
+
 @pytest.mark.parametrize(
     "in_puzzle",
     [
@@ -60,14 +66,14 @@ _SIGNATURE_SPICES = [b"1", b"12"]
 @pytest.mark.parametrize(
     ("encrypt", "decrypt"),
     [
-        utils.get_simple_encrypt_decrypt_pair(*_)
-        for _ in itertools.product(_SOME_HASHES, repeat=2)
+        utils.get_simple_encrypt_decrypt_pair(hash, scrypt_params)
+        for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
     ]
     + [
         utils.get_spiced_simple_encrypt_decrypt_pair(
-            *_, _PROC_SPICES, _SIGNATURE_SPICES
+            hash, _PROC_SPICES, _SIGNATURE_SPICES, scrypt_params
         )
-        for _ in itertools.product(_SOME_HASHES, repeat=2)
+        for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
     ],
 )
 def test_pde(in_puzzle, encrypt, decrypt):
