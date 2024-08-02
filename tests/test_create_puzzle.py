@@ -1,8 +1,6 @@
 import pathlib
-import hashlib
 import subprocess  # nosec B404
 import typing
-import itertools
 import collections
 import black
 import pytest
@@ -85,23 +83,42 @@ def _run_puzzle_str(
 
 _CONFIGURATIONS = [
     {},
-    {"signature_hasher": hashlib.sha3_224, "n": 2**2},
-    {"signature_hasher": hashlib.blake2b, "salt": b"very_bad_salt"},
-    {"encryption": "simple", "signature_hasher": hashlib.blake2b},
+    {"encryption": "simple"},
+    {"encryption": "spiced"},
+    {"scrypt_params": {"n": 2**4, "p": 2, "maxmem": 200000}},
     {
-        "encryption": "spiced",
-        "signature_hasher": hashlib.sha3_224,
-        "proc_spices": [b"\0"],
-        "n": 2**3,
-        "maxmem": 0,
+        "signature_params": {
+            "hasher": {"name": "sha3_384"},
+        }
+    },
+    {"encryption": "simple", "scrypt_params": {"n": 2**3, "maxmem": 100000}},
+    {
+        "encryption": "simple",
+        "signature_params": {"hasher": {"name": "blake2b", "digest_size": 17}},
+    },
+    {
+        "encryption": "simple",
+        "signature_params": {
+            "hasher": {"name": "shake256", "data": b"init"},
+            "digest": {"length": 91},
+        },
     },
     {
         "encryption": "spiced",
-        "signature_hasher": hashlib.sha224,
         "proc_spices": [b"\1"],
-        "signature_spices": [b"\2"],
-        "salt": b"even_worse_salt!",
-        "r": 16,
+        "signature_params": {
+            "hasher": {"name": "shake128"},
+            "digest": {"length": 5},
+        },
+    },
+    {
+        "encryption": "spiced",
+        "signature_spices": [b"\0", b"\10"],
+        "signature_params": {
+            "hasher": {"name": "sha3_256", "data": b"00000"},
+            "digest": {},
+        },
+        "scrypt_params": {"n": 2**5, "r": 16, "salt": b"testSalt!!!"},
     },
 ]
 
@@ -146,30 +163,6 @@ def get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
     return _input_simulator
 
 
-_SOME_HASHES = [
-    hashlib.sha3_384,
-    hashlib.sha3_256,
-]
-
-_PROC_SPICES = [b"11", b"22"]
-_SIGNATURE_SPICES = [b"27", b"07", b"2024"]
-
-_SOME_SCRYPT_PARAMS = [
-    {"salt": b"salt_1", "n": 8, "r": 5, "p": 1},
-    {"salt": b"salt_two", "n": 4, "r": 2, "p": 1},
-]
-
-_ENCRYPT_DECRYPT_PAIRS = [
-    utils.get_simple_encrypt_decrypt_pair(hash, scrypt_params)
-    for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
-] + [
-    utils.get_spiced_simple_encrypt_decrypt_pair(
-        hash, _PROC_SPICES, _SIGNATURE_SPICES, scrypt_params
-    )
-    for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
-]
-
-
 def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
     cur_input = 0
 
@@ -182,7 +175,7 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
     return _input_simulator
 
 
-@pytest.mark.parametrize(("encrypt", "decrypt"), _ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
 def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
     encrypted_puzzle = pde.encrypt_data(
         cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
@@ -194,7 +187,7 @@ def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> Non
     assert captured.out == puzzle_tc.correct.output
 
 
-@pytest.mark.parametrize(("encrypt", "decrypt"), _ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
 def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
     for cur_wrong in puzzle_tc.wrong:
         encrypted_puzzle = pde.encrypt_data(
