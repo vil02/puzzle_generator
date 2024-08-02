@@ -6,7 +6,7 @@ from ...encryption_algorithms.simple import common
 from ...encryption_algorithms.simple import spiced as sse
 from ...puzzle_data_encryption import decrypt_data
 from .. import common as cc
-from .common import MODULES
+from .common import MODULES, scrypt_params, scrypt_params_to_code_str
 from ...run_puzzle import run_puzzle
 from ...bytes_utils import bytes_to_int, split
 
@@ -26,7 +26,7 @@ def _list_of_bytes_to_codestr(in_list: typing.List[bytes]) -> str:
 
 class Spiced:
     def __init__(self, **kwargs):
-        self._proc_hasher = kwargs.get("proc_hasher", cc.DefaultHasher)
+        self._scrypt_params = scrypt_params(**kwargs)
         self._signature_hasher = kwargs.get("signature_hasher", cc.DefaultHasher)
         self._proc_spices = kwargs.get("proc_spices", _get_some_spices())
         self._signature_spices = kwargs.get("signature_spices", _get_some_spices())
@@ -36,18 +36,18 @@ class Spiced:
 
     def get_encrypt(self):
         return sse.get_encrypt(
-            self._proc_hasher,
             self._signature_hasher,
             self._proc_spices,
             self._signature_spices,
+            self._scrypt_params,
         )
 
     def get_needed_objects(self):
         return [
             common.hash_bytes,
-            common.int_to_bytes,
+            common.derive_key,
             common.split_data_and_signature,
-            common.proc_bytes,
+            common.xor_bytes,
             bu.bytestr_to_bytes,
             sse.get_decrypt,
             bytes_to_int,
@@ -65,11 +65,12 @@ class Spiced:
         signature_spices: str = (
             f"_SIGNATURE_SPICES = {_list_of_bytes_to_codestr(self._signature_spices)}"
         )
+        _scrypt_params = scrypt_params_to_code_str(**self._scrypt_params)
         decrypt: str = (
             "_DECRYPT = get_decrypt("
-            f"{cc.get_hasher_name(self._proc_hasher)}, "
             f"{cc.get_hasher_name(self._signature_hasher)}, "
             "_PROC_SPICES, "
-            "_SIGNATURE_SPICES)"
+            "_SIGNATURE_SPICES, "
+            "_SCRYPT_PARAMS)"
         )
-        return "\n".join([proc_spices, signature_spices, decrypt])
+        return "\n".join([proc_spices, signature_spices, _scrypt_params, decrypt])

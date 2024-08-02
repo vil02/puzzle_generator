@@ -1,4 +1,4 @@
-import itertools
+import hashlib
 import typing
 
 
@@ -6,17 +6,13 @@ def hash_bytes(in_bytes: bytes, in_hasher) -> bytes:
     return in_hasher(in_bytes).digest()
 
 
-def int_to_bytes(in_val: int) -> bytes:
-    return in_val.to_bytes((in_val.bit_length() + 7) // 8, "big")
+def derive_key(**kwargs):
+    return hashlib.scrypt(**kwargs)
 
 
-def proc_bytes(in_bytes: bytes, in_key: bytes, in_hasher) -> bytes:
-    """xors the in_bytes with a sequence of bytes generated with in_key"""
-    key_bytes = itertools.chain.from_iterable(
-        in_hasher(in_key + int_to_bytes(block_num)).digest()
-        for block_num in itertools.count(0)
-    )
-    return bytes(_d ^ _k for (_d, _k) in zip(in_bytes, key_bytes))
+def xor_bytes(in_bytes: bytes, in_key: bytes) -> bytes:
+    """xors the in_bytes with a sequence of bytes with in_key"""
+    return bytes(_d ^ _k for (_d, _k) in zip(in_bytes, in_key, strict=True))
 
 
 def merge_data_and_signature(in_data: bytes, in_signature: bytes) -> bytes:

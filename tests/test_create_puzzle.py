@@ -85,22 +85,23 @@ def _run_puzzle_str(
 
 _CONFIGURATIONS = [
     {},
-    {"proc_hasher": hashlib.md5},
-    {"proc_hasher": hashlib.sha1, "signature_hasher": hashlib.sha3_224},
-    {"signature_hasher": hashlib.blake2b},
+    {"signature_hasher": hashlib.sha3_224, "n": 2**2},
+    {"signature_hasher": hashlib.blake2b, "salt": b"very_bad_salt"},
     {"encryption": "simple", "signature_hasher": hashlib.blake2b},
     {
         "encryption": "spiced",
-        "proc_hasher": hashlib.sha224,
         "signature_hasher": hashlib.sha3_224,
         "proc_spices": [b"\0"],
+        "n": 2**3,
+        "maxmem": 0,
     },
     {
         "encryption": "spiced",
-        "proc_hasher": hashlib.sha3_224,
         "signature_hasher": hashlib.sha224,
         "proc_spices": [b"\1"],
         "signature_spices": [b"\2"],
+        "salt": b"even_worse_salt!",
+        "r": 16,
     },
 ]
 
@@ -153,12 +154,19 @@ _SOME_HASHES = [
 _PROC_SPICES = [b"11", b"22"]
 _SIGNATURE_SPICES = [b"27", b"07", b"2024"]
 
+_SOME_SCRYPT_PARAMS = [
+    {"salt": b"salt_1", "n": 8, "r": 5, "p": 1},
+    {"salt": b"salt_two", "n": 4, "r": 2, "p": 1},
+]
+
 _ENCRYPT_DECRYPT_PAIRS = [
-    utils.get_simple_encrypt_decrypt_pair(*_)
-    for _ in itertools.product(_SOME_HASHES, repeat=2)
+    utils.get_simple_encrypt_decrypt_pair(hash, scrypt_params)
+    for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
 ] + [
-    utils.get_spiced_simple_encrypt_decrypt_pair(*_, _PROC_SPICES, _SIGNATURE_SPICES)
-    for _ in itertools.product(_SOME_HASHES, repeat=2)
+    utils.get_spiced_simple_encrypt_decrypt_pair(
+        hash, _PROC_SPICES, _SIGNATURE_SPICES, scrypt_params
+    )
+    for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
 ]
 
 
