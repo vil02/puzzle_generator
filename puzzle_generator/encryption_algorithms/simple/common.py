@@ -2,8 +2,19 @@ import hashlib
 import typing
 
 
-def hash_bytes(in_bytes: bytes, in_hasher) -> bytes:
-    return in_hasher(in_bytes).digest()
+def digest_size(params) -> int:
+    hasher = hashlib.new(**params["hasher"])
+    res = hasher.digest_size
+    if res > 0:
+        return res
+    return params["digest"]["length"]
+
+
+def hash_bytes(in_bytes: bytes, params) -> bytes:
+    hasher = hashlib.new(**params["hasher"])
+    hasher.update(in_bytes)
+    res = hasher.digest(**params["digest"])
+    return res
 
 
 def derive_key(**kwargs):

@@ -1,24 +1,7 @@
-import hashlib
-import itertools
 import pytest
 
 import puzzle_generator.puzzle_data_encryption as pde
 from . import utils
-
-_SOME_HASHES = [
-    hashlib.sha1,
-    hashlib.sha256,
-]
-
-
-_PROC_SPICES = [b"a"]
-_SIGNATURE_SPICES = [b"1", b"12"]
-
-
-_SOME_SCRYPT_PARAMS = [
-    {"salt": b"some_bad_salt_0", "n": 8, "r": 5, "p": 1},
-    {"salt": b"some_other_bad_salt_1", "n": 4, "r": 2, "p": 1},
-]
 
 
 @pytest.mark.parametrize(
@@ -63,19 +46,7 @@ _SOME_SCRYPT_PARAMS = [
         },
     ],
 )
-@pytest.mark.parametrize(
-    ("encrypt", "decrypt"),
-    [
-        utils.get_simple_encrypt_decrypt_pair(hash, scrypt_params)
-        for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
-    ]
-    + [
-        utils.get_spiced_simple_encrypt_decrypt_pair(
-            hash, _PROC_SPICES, _SIGNATURE_SPICES, scrypt_params
-        )
-        for hash, scrypt_params in itertools.product(_SOME_HASHES, _SOME_SCRYPT_PARAMS)
-    ],
-)
+@pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
 def test_pde(in_puzzle, encrypt, decrypt):
     encrypted_puzzle = pde.encrypt_data(in_puzzle, encrypt)
     tmp_puzzle_data = in_puzzle
