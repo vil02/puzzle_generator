@@ -2,10 +2,12 @@ import typing
 
 from ...encryption_algorithms.simple import simple as se
 from . import common as csc
+from ..check_kwargs import check_kwargs
 
 
 class Simple:
     def __init__(self, **kwargs):
+        check_kwargs({"scrypt_params", "signature_params"}, **kwargs)
         self._scrypt_params = csc.scrypt_params(**kwargs)
         self._signature_params = csc.signature_params(**kwargs)
 
