@@ -8,4 +8,5 @@ def get_configurator(**kwargs):
         "simple": simple.Simple,
         "spiced": spiced.Spiced,
     }
-    return configurators[encryption](**kwargs)
+    new_kwargs = {_k: _v for _k, _v in kwargs.items() if _k != "encryption"}
+    return configurators[encryption](**new_kwargs)
