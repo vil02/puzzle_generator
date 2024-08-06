@@ -5,14 +5,13 @@ BYTEORDER: typing.Literal["little", "big"] = "little"
 
 
 def int_to_bytes(in_value: int) -> bytes:
-    assert in_value >= 0  # nosec B101
+    if in_value < 0:
+        raise ValueError("in_value must be a positve integer")
     number_of_bytes = in_value.bit_length() // 8
     if 8 * number_of_bytes < in_value.bit_length():
         number_of_bytes += 1
-    assert number_of_bytes <= 256  # nosec B101
-    assert (
-        number_of_bytes - 1 <= in_value.bit_length() // 8 <= number_of_bytes
-    )  # nosec B101
+    if number_of_bytes > 256:
+        raise ValueError("in_value must be 256 bytes or less")
     return number_of_bytes.to_bytes(length=1, byteorder=BYTEORDER) + in_value.to_bytes(
         length=number_of_bytes, byteorder=BYTEORDER
     )
