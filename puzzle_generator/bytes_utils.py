@@ -10,8 +10,8 @@ def int_to_bytes(in_value: int) -> bytes:
     number_of_bytes = in_value.bit_length() // 8
     if 8 * number_of_bytes < in_value.bit_length():
         number_of_bytes += 1
-    if number_of_bytes > 256:
-        raise ValueError("in_value must be 256 bytes or less")
+    if number_of_bytes > 255:
+        raise ValueError("in_value must be 255 bytes or less")
     return number_of_bytes.to_bytes(length=1, byteorder=BYTEORDER) + in_value.to_bytes(
         length=number_of_bytes, byteorder=BYTEORDER
     )
