@@ -20,3 +20,8 @@ def test_split_and_join(in_str, in_bytes):
     res_str, res_bytes = bu.split(bu.join(in_str, in_bytes))
     assert res_str == in_str
     assert res_bytes == in_bytes
+
+
+def test_int_to_bytes_length():
+    with pytest.raises(ValueError, match="in_value must be 255 bytes or less"):
+        bu.int_to_bytes(2 ** (8 * 255))
