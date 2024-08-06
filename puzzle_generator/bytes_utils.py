@@ -6,7 +6,7 @@ BYTEORDER: typing.Literal["little", "big"] = "little"
 
 def int_to_bytes(in_value: int) -> bytes:
     if in_value < 0:
-        raise ValueError("in_value must be a positve integer")
+        raise ValueError("in_value must be non-negative")
     number_of_bytes = in_value.bit_length() // 8
     if 8 * number_of_bytes < in_value.bit_length():
         number_of_bytes += 1
