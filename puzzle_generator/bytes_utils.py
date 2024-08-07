@@ -15,7 +15,7 @@ def int_to_bytes(in_value: int) -> bytes:
     )
 
 
-def get_num_bytes(in_value):
+def byte_length(in_value):
     number_of_bytes = in_value.bit_length() // 8
     if 8 * number_of_bytes < in_value.bit_length():
         number_of_bytes += 1
