@@ -7,10 +7,38 @@ from . import utils
 
 
 @pytest.mark.parametrize(
-    "in_value", [0, 1, 2, 3, 255, 256, 257, 3239949409384, 10**570]
+    ("in_value", "expected"),
+    [
+        (0, 0),
+        (1, 1),
+        (2, 1),
+        (3, 1),
+        (255, 1),
+        (256, 2),
+        (257, 2),
+        (2 ** (8 * 255) - 1, 255),
+        (2 ** (8 * 255), 256),
+    ],
+)
+def test_byte_length(in_value, expected):
+    assert bu.byte_length(in_value) == expected
+
+
+def test_byte_length_raises_for_negative_input():
+    with pytest.raises(ValueError, match="in_value must be non-negative"):
+        bu.byte_length(-1)
+
+
+@pytest.mark.parametrize(
+    "in_value", [0, 1, 2, 3, 255, 256, 257, 3239949409384, 10**570, 2 ** (8 * 255) - 1]
 )
 def test_int_to_bytes(in_value):
     assert bu.bytes_to_int(bu.int_to_bytes(in_value)) == in_value
+
+
+def test_int_to_bytes_raises_when_input_is_too_big():
+    with pytest.raises(ValueError, match="in_value must be 255 bytes or less"):
+        bu.int_to_bytes(2 ** (8 * 255))
 
 
 @pytest.mark.parametrize(
