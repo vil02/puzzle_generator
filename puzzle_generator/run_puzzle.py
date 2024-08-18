@@ -7,8 +7,8 @@ from .puzzle_data_encryption import decrypt_data
 def run_puzzle(
     in_puzzle: typing.Tuple[str, bytes],
     in_decrypt: typing.Callable[[bytes, bytes], bytes | None],
-    get_answer,
-):
+    get_answer: typing.Callable[[], str],
+) -> None:
     question, rest = in_puzzle
     print(question)
     if rest:

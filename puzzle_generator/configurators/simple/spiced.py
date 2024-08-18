@@ -4,6 +4,7 @@ import typing
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
 from . import common as csc
+from ..check_kwargs import check_kwargs
 
 
 def _get_some_spices():
@@ -21,6 +22,10 @@ def _list_of_bytes_to_codestr(in_list: typing.List[bytes]) -> str:
 
 class Spiced:
     def __init__(self, **kwargs):
+        check_kwargs(
+            {"scrypt_params", "signature_params", "proc_spices", "signature_spices"},
+            **kwargs,
+        )
         self._scrypt_params = csc.scrypt_params(**kwargs)
         self._signature_params = csc.signature_params(**kwargs)
         self._proc_spices = kwargs.get("proc_spices", _get_some_spices())
