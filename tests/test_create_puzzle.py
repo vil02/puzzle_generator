@@ -86,38 +86,19 @@ _CONFIGURATIONS = [
     {"encryption": "simple"},
     {"encryption": "spiced"},
     {"scrypt_params": {"n": 2**4, "p": 2, "maxmem": 200000}},
-    {
-        "signature_params": {
-            "hasher": {"name": "sha3_384"},
-        }
-    },
+    {"signature_params": {"digest": "sha3_384"}},
     {"encryption": "simple", "scrypt_params": {"n": 2**3, "maxmem": 100000}},
-    {
-        "encryption": "simple",
-        "signature_params": {"hasher": {"name": "blake2b", "digest_size": 17}},
-    },
-    {
-        "encryption": "simple",
-        "signature_params": {
-            "hasher": {"name": "shake256", "data": b"init"},
-            "digest": {"length": 91},
-        },
-    },
+    {"encryption": "simple", "signature_params": {"digest": "blake2b"}},
+    {"encryption": "simple", "signature_params": {"digest": "blake2s"}},
     {
         "encryption": "spiced",
         "proc_spices": [b"\1"],
-        "signature_params": {
-            "hasher": {"name": "shake128"},
-            "digest": {"length": 5},
-        },
+        "signature_params": {"digest": "sha3_512"},
     },
     {
         "encryption": "spiced",
         "signature_spices": [b"\0", b"\10"],
-        "signature_params": {
-            "hasher": {"name": "sha3_256", "data": b"00000"},
-            "digest": {},
-        },
+        "signature_params": {"digest": "sha3_256"},
         "scrypt_params": {"n": 2**5, "r": 16, "salt": b"testSalt!!!"},
     },
 ]

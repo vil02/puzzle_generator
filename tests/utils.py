@@ -26,21 +26,18 @@ SOME_SCRYPT_PARAMS = [
 PROC_SPICES = [b"a", b"bb", b"ccc", b"dddd"]
 SIGNATURE_SPICES = [b"XXX", b"YY", b"Z"]
 
-SOME_SIGNATURE_PARAMS = [
-    {"hasher": {"name": "sha512"}, "digest": {}},
-    {"hasher": {"name": "sha3_512", "data": b"initial_data"}, "digest": {}},
-    {"hasher": {"name": "blake2b", "digest_size": 63}, "digest": {}},
-    {"hasher": {"name": "blake2s", "digest_size": 10, "person": b"tmp?"}, "digest": {}},
-    {"hasher": {"name": "shake_256"}, "digest": {"length": 999}},
-    {
-        "hasher": {
-            "name": "shake_128",
-            "data": b"some_initial_data",
-            "usedforsecurity": False,
-        },
-        "digest": {"length": 10},
-    },
+_SOME_HASHES = [
+    "sha256",
+    "sha384",
+    "sha512",
+    "sha3_256",
+    "sha3_384",
+    "sha3_512",
+    "blake2b",
+    "blake2s",
 ]
+
+SOME_SIGNATURE_PARAMS = [{"digest": _} for _ in _SOME_HASHES]
 
 
 def _get_simple_encrypt_decrypt_pair(*args):
