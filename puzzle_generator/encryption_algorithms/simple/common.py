@@ -1,20 +1,15 @@
+import hmac
 import hashlib
 import typing
 
 
 def digest_size(params) -> int:
-    hasher = hashlib.new(**params["hasher"])
-    res = hasher.digest_size
-    if res > 0:
-        return res
-    return params["digest"]["length"]
+    hasher = hashlib.new(params["digest"])
+    return hasher.digest_size
 
 
-def hash_bytes(in_bytes: bytes, params) -> bytes:
-    hasher = hashlib.new(**params["hasher"])
-    hasher.update(in_bytes)
-    res = hasher.digest(**params["digest"])
-    return res
+def sign_bytes(in_bytes: bytes, in_key: bytes, params) -> bytes:
+    return hmac.digest(msg=in_bytes, key=in_key, **params)
 
 
 def derive_key(**kwargs):

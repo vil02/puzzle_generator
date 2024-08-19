@@ -6,10 +6,10 @@ from ... import bytes_utils as bu
 from ... import puzzle_data_encryption as pde
 from ... import run_puzzle as rp
 
-MODULES = ["hashlib", "base64", "sys", "typing"]
+MODULES = ["hmac", "hashlib", "base64", "sys", "typing"]
 
 OBJECTS = [
-    common.hash_bytes,
+    common.sign_bytes,
     common.derive_key,
     common.split_data_and_signature,
     common.digest_size,
@@ -34,10 +34,7 @@ def scrypt_params(**kwargs):
 
 
 def signature_params(**kwargs):
-    res = kwargs.get("signature_params", {"hasher": {"name": "sha512"}, "digest": {}})
-    if "digest" not in res:
-        res["digest"] = {}
-    return res
+    return kwargs.get("signature_params", {"digest": "sha512"})
 
 
 def scrypt_params_to_code_str(**kwargs) -> str:

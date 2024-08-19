@@ -4,7 +4,7 @@ import secrets
 from .common import (
     derive_key,
     xor_bytes,
-    hash_bytes,
+    sign_bytes,
     digest_size,
     merge_data_and_signature,
     split_data_and_signature,
@@ -22,7 +22,7 @@ def get_encrypt(
 
     def _encrypt(in_bytes: bytes, in_pass: bytes) -> bytes:
         signature_spice = secrets.choice(signature_spices)
-        signature = hash_bytes(in_bytes + signature_spice, signature_params)
+        signature = sign_bytes(in_bytes + signature_spice, in_pass, signature_params)
         merged = merge_data_and_signature(in_bytes, signature)
         proc_spice = secrets.choice(proc_spices)
         key = derive_key(
@@ -53,7 +53,7 @@ def get_decrypt(
             )
 
             if any(
-                hash_bytes(decrypted + _, signature_params) == signature
+                sign_bytes(decrypted + _, in_pass, signature_params) == signature
                 for _ in signature_spices
             ):
                 return decrypted
