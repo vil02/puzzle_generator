@@ -1,7 +1,22 @@
+import typing
 import pytest
 
 import puzzle_generator.puzzle_data_encryption as pde
 from . import utils
+
+
+def _decrypt_data(
+    puzzle_bytes: bytes,
+    cur_pass: str,
+    decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> tuple[str, bytes]:
+    res = pde.decrypt_data(
+        puzzle_bytes,
+        cur_pass,
+        decrypt,
+    )
+    assert res is not None
+    return res
 
 
 @pytest.mark.parametrize(
@@ -47,7 +62,11 @@ from . import utils
     ],
 )
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
-def test_pde(in_puzzle, encrypt, decrypt):
+def test_pde(
+    in_puzzle,
+    encrypt: typing.Callable[[bytes, bytes], bytes],
+    decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> None:
     encrypted_puzzle = pde.encrypt_data(in_puzzle, encrypt)
     tmp_puzzle_data = in_puzzle
     while len(encrypted_puzzle[1]) > 0:
@@ -61,7 +80,7 @@ def test_pde(in_puzzle, encrypt, decrypt):
             )
             is None
         )
-        encrypted_puzzle = pde.decrypt_data(
+        encrypted_puzzle = _decrypt_data(
             encrypted_puzzle[1],
             cur_pass,
             decrypt,
