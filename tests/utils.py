@@ -1,5 +1,6 @@
 import string
 import itertools
+import typing
 
 import puzzle_generator.encryption_algorithms.simple.simple as se
 import puzzle_generator.encryption_algorithms.simple.spiced as sse
@@ -40,11 +41,21 @@ _SOME_HASHES = [
 SOME_SIGNATURE_PARAMS = [{"digest": _} for _ in _SOME_HASHES]
 
 
-def _get_simple_encrypt_decrypt_pair(*args):
+def _get_simple_encrypt_decrypt_pair(
+    *args,
+) -> typing.Tuple[
+    typing.Callable[[bytes, bytes], bytes],
+    typing.Callable[[bytes, bytes], bytes | None],
+]:
     return se.get_encrypt(*args), se.get_decrypt(*args)
 
 
-def _get_spiced_simple_encrypt_decrypt_pair(*args):
+def _get_spiced_simple_encrypt_decrypt_pair(
+    *args,
+) -> typing.Tuple[
+    typing.Callable[[bytes, bytes], bytes],
+    typing.Callable[[bytes, bytes], bytes | None],
+]:
     return sse.get_encrypt(*args), sse.get_decrypt(*args)
 
 

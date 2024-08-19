@@ -5,6 +5,6 @@ from .. import utils
 
 
 @pytest.mark.parametrize("in_signature_params", utils.SOME_SIGNATURE_PARAMS)
-def test_digest_size(in_signature_params):
+def test_digest_size(in_signature_params: dict[str, str]) -> None:
     some_hash = eac.sign_bytes(b"some_msg", b"some_key", in_signature_params)
     assert eac.digest_size(in_signature_params) == len(some_hash)

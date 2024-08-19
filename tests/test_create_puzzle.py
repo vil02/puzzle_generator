@@ -24,7 +24,7 @@ _PuzzleTestCase = collections.namedtuple(
 
 
 @pytest.fixture(name="puzzle_tc")
-def fixture_puzzle_tc():
+def fixture_puzzle_tc() -> _PuzzleTestCase:
     qa_list = [
         "Question 1?",
         "Answer 1",
@@ -157,7 +157,12 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
-def test_run_puzzle_all_good_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
+def test_run_puzzle_all_good_answers(
+    capsys,
+    puzzle_tc,
+    encrypt: typing.Callable[[bytes, bytes], bytes],
+    decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> None:
     encrypted_puzzle = pde.encrypt_data(
         cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
     )
@@ -224,7 +229,7 @@ def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
         ),
     ],
 )
-def test_question_answer_list_to_dict(qa_list, expected):
+def test_question_answer_list_to_dict(qa_list: list[str], expected) -> None:
     assert cp.question_answer_list_to_dict(qa_list) == expected
 
 
@@ -237,8 +242,8 @@ def test_question_answer_list_to_dict(qa_list, expected):
     ],
 )
 def test_question_answer_list_to_dict_raises_when_input_list_has_even_length(
-    wrong_qa_list,
-):
+    wrong_qa_list: list[str],
+) -> None:
     with pytest.raises(
         ValueError, match="The question/answer list must have odd length."
     ):
