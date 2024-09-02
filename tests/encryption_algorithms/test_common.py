@@ -8,3 +8,8 @@ from .. import utils
 def test_digest_size(in_signature_params: dict[str, str]) -> None:
     some_hash = eac.sign_bytes(b"some_msg", b"some_key", in_signature_params)
     assert eac.digest_size(in_signature_params) == len(some_hash)
+
+
+def test_split_data_and_signature_raises():
+    with pytest.raises(ValueError, match="in_bytes is shorter than signature_size"):
+        eac.split_data_and_signature(b"0", 2)

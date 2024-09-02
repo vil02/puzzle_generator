@@ -28,7 +28,8 @@ def merge_data_and_signature(in_data: bytes, in_signature: bytes) -> bytes:
 def split_data_and_signature(
     in_bytes: bytes, signature_size: int
 ) -> typing.Tuple[bytes, bytes]:
-    assert len(in_bytes) >= signature_size  # nosec B101
+    if len(in_bytes) < signature_size:
+        raise ValueError("in_bytes is shorter than signature_size")
     data = in_bytes[:-signature_size]
     signature = in_bytes[-signature_size:]
     return data, signature
