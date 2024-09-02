@@ -24,7 +24,8 @@ def int_to_bytes(in_value: int) -> bytes:
 
 def bytes_to_int(in_bytes: bytes) -> int:
     bytes_length = int(in_bytes[0])
-    assert len(in_bytes) == bytes_length + 1  # nosec B101
+    if len(in_bytes) != bytes_length + 1:
+        raise ValueError("in_bytes has wrong structure")
     return int.from_bytes(in_bytes[1:], byteorder=BYTEORDER)
 
 

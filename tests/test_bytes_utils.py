@@ -36,6 +36,11 @@ def test_int_to_bytes(in_value: int) -> None:
     assert bu.bytes_to_int(bu.int_to_bytes(in_value)) == in_value
 
 
+def test_bytes_to_int_raises_when_input_has_wrong_length():
+    with pytest.raises(ValueError, match="in_bytes has wrong structure"):
+        bu.bytes_to_int(bytes([2, 1]))
+
+
 def test_int_to_bytes_raises_when_input_is_too_big() -> None:
     with pytest.raises(ValueError, match="in_value must be 255 bytes or less"):
         bu.int_to_bytes(2 ** (8 * 255))
