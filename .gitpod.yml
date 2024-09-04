@@ -1,0 +1,12 @@
+---
+image:
+  file: gitpod.dockerfile
+
+tasks:
+  - init: |
+      poetry install --with dev
+
+github:
+  prebuilds:
+    addComment: true
+...
