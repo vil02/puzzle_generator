@@ -44,6 +44,7 @@ class Spiced:
 
     def get_needed_objects(self):
         return csc.OBJECTS + [
+            sse.must_be_nonempty,
             sse.get_decrypt,
         ]
 
