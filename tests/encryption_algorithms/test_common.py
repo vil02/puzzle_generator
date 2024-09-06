@@ -10,6 +10,6 @@ def test_digest_size(in_signature_params: dict[str, str]) -> None:
     assert eac.digest_size(in_signature_params) == len(some_hash)
 
 
-def test_split_data_and_signature_raises():
+def test_split_data_and_signature_raises() -> None:
     with pytest.raises(ValueError, match="in_bytes is shorter than signature_size"):
         eac.split_data_and_signature(b"0", 2)
