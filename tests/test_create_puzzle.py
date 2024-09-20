@@ -11,44 +11,54 @@ import puzzle_generator.puzzle_data_encryption as pde
 
 from . import utils
 
-_InputOutput = collections.namedtuple("_InputOutput", ["input", "output"])
-
 _PuzzleTestCase = collections.namedtuple(
     "_PuzzleTestCase",
     [
         "qa_list",
-        "correct",
-        "wrong",
+        "input",
+        "output",
     ],
 )
 
 
-@pytest.fixture(name="puzzle_tc")
-def fixture_puzzle_tc() -> _PuzzleTestCase:
-    qa_list = [
-        "Question 1?",
-        "Answer 1",
-        "Question 2?",
-        "Is this the final answer?",
-        "Congratulations!",
-    ]
+def _get_input(qa_list: typing.List[str]) -> typing.List[str]:
+    return [_ for num, _ in enumerate(qa_list) if num % 2 == 1]
+
+
+def _get_positive_output(qa_list: typing.List[str]) -> str:
+    return "\n".join(_ for num, _ in enumerate(qa_list) if num % 2 == 0) + "\n"
+
+
+def _positive_puzzle_tc(qa_list: typing.List[str]) -> _PuzzleTestCase:
     return _PuzzleTestCase(
-        qa_list=qa_list,
-        correct=_InputOutput(
-            input=["Answer 1", "Is this the final answer?"],
-            output="Question 1?\nQuestion 2?\nCongratulations!\n",
-        ),
-        wrong=[
-            _InputOutput(
-                input=["Answer 1", "This is a wrong answer"],
-                output="Question 1?\nQuestion 2?\nThis is a wrong answer. Try again!\n",
-            ),
-            _InputOutput(
-                input=["This is a wrong answer"],
-                output="Question 1?\nThis is a wrong answer. Try again!\n",
-            ),
-        ],
+        qa_list=qa_list, input=_get_input(qa_list), output=_get_positive_output(qa_list)
     )
+
+
+_QA_LIST_1 = [
+    "Question 1?",
+    "Answer 1",
+    "Question 2?",
+    "Is this the final answer?",
+    "Congratulations!",
+]
+
+_POSITIVE_PUZZLE_TCS = [
+    _positive_puzzle_tc(_QA_LIST_1),
+]
+
+_NEGATIVE_PUZZLE_TCS = [
+    _PuzzleTestCase(
+        qa_list=_QA_LIST_1,
+        input=["Answer 1", "This is a wrong answer"],
+        output="Question 1?\nQuestion 2?\nThis is a wrong answer. Try again!\n",
+    ),
+    _PuzzleTestCase(
+        qa_list=_QA_LIST_1,
+        input=["This is a wrong answer"],
+        output="Question 1?\nThis is a wrong answer. Try again!\n",
+    ),
+]
 
 
 @pytest.fixture(name="puzzle_path")
@@ -105,31 +115,32 @@ _CONFIGURATIONS = [
 
 
 @pytest.mark.parametrize("configuration", _CONFIGURATIONS)
+@pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS)
 def test_all_good_answers(
     puzzle_tc,
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
     puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
-    res = _run_puzzle_str(puzzle, puzzle_tc.correct.input, puzzle_path)
+    res = _run_puzzle_str(puzzle, puzzle_tc.input, puzzle_path)
 
     assert res.returncode == 0
-    assert res.stdout == puzzle_tc.correct.output
+    assert res.stdout == puzzle_tc.output
     assert not res.stderr
 
 
 @pytest.mark.parametrize("configuration", _CONFIGURATIONS)
+@pytest.mark.parametrize("puzzle_tc", _NEGATIVE_PUZZLE_TCS)
 def test_wrong_answers(
     puzzle_tc,
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
-    for cur_wrong in puzzle_tc.wrong:
-        puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
-        res = _run_puzzle_str(puzzle, cur_wrong.input, puzzle_path)
-        assert res.returncode == 1
-        assert res.stdout == cur_wrong.output
-        assert not res.stderr
+    puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
+    res = _run_puzzle_str(puzzle, puzzle_tc.input, puzzle_path)
+    assert res.returncode == 1
+    assert res.stdout == puzzle_tc.output
+    assert not res.stderr
 
 
 def get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
@@ -157,6 +168,7 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS)
 def test_run_puzzle_all_good_answers(
     capsys,
     puzzle_tc,
@@ -166,29 +178,27 @@ def test_run_puzzle_all_good_answers(
     encrypted_puzzle = pde.encrypt_data(
         cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
     )
-    rp.run_puzzle(
-        encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.correct.input)
-    )
+    rp.run_puzzle(encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.input))
     captured = capsys.readouterr()
-    assert captured.out == puzzle_tc.correct.output
+    assert captured.out == puzzle_tc.output
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize("puzzle_tc", _NEGATIVE_PUZZLE_TCS)
 def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
-    for cur_wrong in puzzle_tc.wrong:
-        encrypted_puzzle = pde.encrypt_data(
-            cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+    encrypted_puzzle = pde.encrypt_data(
+        cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        rp.run_puzzle(
+            encrypted_puzzle,
+            decrypt,
+            _get_input_simulator(puzzle_tc.input),
         )
-        with pytest.raises(SystemExit) as exc_info:
-            rp.run_puzzle(
-                encrypted_puzzle,
-                decrypt,
-                _get_input_simulator(cur_wrong.input),
-            )
-        captured = capsys.readouterr()
-        assert captured.out == cur_wrong.output
-        assert exc_info.type is SystemExit
-        assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert captured.out == puzzle_tc.output
+    assert exc_info.type is SystemExit
+    assert exc_info.value.code == 1
 
 
 @pytest.mark.parametrize(
