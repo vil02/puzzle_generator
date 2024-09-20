@@ -137,7 +137,7 @@ _CONFIGURATIONS = [
 @pytest.mark.parametrize("configuration", _CONFIGURATIONS)
 @pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS)
 def test_all_good_answers(
-    puzzle_tc,
+    puzzle_tc: _PuzzleTestCase,
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
@@ -152,7 +152,7 @@ def test_all_good_answers(
 @pytest.mark.parametrize("configuration", _CONFIGURATIONS)
 @pytest.mark.parametrize("puzzle_tc", _NEGATIVE_PUZZLE_TCS)
 def test_wrong_answers(
-    puzzle_tc,
+    puzzle_tc: _PuzzleTestCase,
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
@@ -191,7 +191,7 @@ def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
 @pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS)
 def test_run_puzzle_all_good_answers(
     capsys,
-    puzzle_tc,
+    puzzle_tc: _PuzzleTestCase,
     encrypt: typing.Callable[[bytes, bytes], bytes],
     decrypt: typing.Callable[[bytes, bytes], bytes | None],
 ) -> None:
@@ -205,7 +205,9 @@ def test_run_puzzle_all_good_answers(
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
 @pytest.mark.parametrize("puzzle_tc", _NEGATIVE_PUZZLE_TCS)
-def test_run_puzzle_wrong_answers(capsys, puzzle_tc, encrypt, decrypt) -> None:
+def test_run_puzzle_wrong_answers(
+    capsys, puzzle_tc: _PuzzleTestCase, encrypt, decrypt
+) -> None:
     encrypted_puzzle = pde.encrypt_data(
         cp.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
     )
