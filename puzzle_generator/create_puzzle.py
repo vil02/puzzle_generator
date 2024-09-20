@@ -32,7 +32,7 @@ def _create_str(in_encrypted_puzzle, configurator) -> str:
     )
     question = in_encrypted_puzzle[0]
     rest_str = bytestr_utils.bytes_to_bytestr(in_encrypted_puzzle[1])
-    puzzle_data: str = f'_PUZZLE = ("{question}", bytestr_to_bytes("{rest_str}"))'
+    puzzle_data: str = f'_PUZZLE = ("""{question}""", bytestr_to_bytes("{rest_str}"))'
     call: str = "run_puzzle(_PUZZLE, _DECRYPT, input)"
 
     return (

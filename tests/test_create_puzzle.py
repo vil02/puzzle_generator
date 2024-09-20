@@ -43,8 +43,18 @@ _QA_LIST_1 = [
     "Congratulations!",
 ]
 
+
+_QA_LIST_2 = [
+    "Question 1❓\n-------\nWith several lines!\n",
+    "1",
+    "Q2?",
+    "A2",
+    "😄",
+]
+
 _POSITIVE_PUZZLE_TCS = [
     _positive_puzzle_tc(_QA_LIST_1),
+    _positive_puzzle_tc(_QA_LIST_2),
 ]
 
 _NEGATIVE_PUZZLE_TCS = [
@@ -57,6 +67,16 @@ _NEGATIVE_PUZZLE_TCS = [
         qa_list=_QA_LIST_1,
         input=["This is a wrong answer"],
         output="Question 1?\nThis is a wrong answer. Try again!\n",
+    ),
+    _PuzzleTestCase(
+        qa_list=_QA_LIST_2,
+        input=["Wrong!"],
+        output="""Question 1❓
+-------
+With several lines!
+
+This is a wrong answer. Try again!
+""",
     ),
 ]
 
