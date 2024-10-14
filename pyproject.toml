@@ -23,7 +23,7 @@ flake8 = "7.1.1"
 flake8-bugbear = "24.8.19"
 flake8-pytest-style = "2.0.0"
 ruff = "0.6.9"
-coverage = "7.6.2"
+coverage = "7.6.3"
 mypy = "1.11.2"
 bandit = "1.7.10"
 
