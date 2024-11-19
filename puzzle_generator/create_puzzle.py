@@ -1,5 +1,6 @@
 import inspect
 import typing
+import importlib.metadata
 
 import black
 
@@ -20,12 +21,17 @@ def question_answer_list_to_dict(qa_list: typing.List[str]):
     }
 
 
-def _create_str(in_encrypted_puzzle, configurator) -> str:
-    advertisement = """# generated with puzzle-generator
+def _advertisement() -> str:
+    package_name = "puzzle-generator"
+    full_name = f"{package_name} {importlib.metadata.version(package_name)}"
+    return f"""# generated with {full_name}
 #
 # https://pypi.org/project/puzzle-generator/
 # https://github.com/vil02/puzzle_generator/
 """
+
+
+def _create_str(in_encrypted_puzzle, configurator) -> str:
     modules: str = "\n".join("import " + _ for _ in configurator.get_modules()) + "\n"
     objects: str = "\n".join(
         inspect.getsource(_) for _ in configurator.get_needed_objects()
@@ -38,7 +44,7 @@ def _create_str(in_encrypted_puzzle, configurator) -> str:
     return (
         "\n".join(
             [
-                advertisement,
+                _advertisement(),
                 modules,
                 'BYTEORDER: typing.Literal["little", "big"] = "little"',
                 objects,

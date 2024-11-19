@@ -2,6 +2,7 @@ import pathlib
 import subprocess  # nosec B404
 import typing
 import collections
+import importlib.metadata
 import black
 import pytest
 
@@ -106,6 +107,10 @@ def _run_puzzle_str(
     in_puzzle: str, answers: list[str], in_puzzle_path: pathlib.Path
 ) -> subprocess.CompletedProcess[str]:
     assert in_puzzle == black.format_str(in_puzzle, mode=black.FileMode())
+    assert (
+        f"puzzle-generator {importlib.metadata.version('puzzle-generator')}"
+        in in_puzzle
+    )
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
