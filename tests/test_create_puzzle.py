@@ -44,9 +44,16 @@ _QA_LIST_1 = [
     "Congratulations!",
 ]
 
+_MULTILINE_QUESTION = (
+    "Question 1❓\n"
+    "-very-long-line----------------------------------------------------"
+    "-------------------------------------------------------------------"
+    "------------------------------------------------end-of-long-line-\n"
+    "With several lines!\n"
+)
 
 _QA_LIST_2 = [
-    "Question 1❓\n-------\nWith several lines!\n",
+    _MULTILINE_QUESTION,
     "1",
     "Q2?",
     "A2",
@@ -72,10 +79,8 @@ _NEGATIVE_PUZZLE_TCS = [
     _PuzzleTestCase(
         qa_list=_QA_LIST_2,
         input=["Wrong!"],
-        output="""Question 1❓
--------
-With several lines!
-
+        output=_MULTILINE_QUESTION
+        + """
 This is a wrong answer. Try again!
 """,
     ),
@@ -111,6 +116,7 @@ def _run_puzzle_str(
         f"puzzle-generator {importlib.metadata.version('puzzle-generator')}"
         in in_puzzle
     )
+    assert all(len(_) <= 88 for _ in in_puzzle.splitlines())
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
