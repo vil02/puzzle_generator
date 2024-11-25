@@ -5,20 +5,9 @@ import importlib.metadata
 import black
 
 from .puzzle_data_encryption import encrypt_data
+from .puzzle_data_creators import question_answer_list_to_dict
 from .configurators import configurators
 from . import bytestr_utils
-
-
-def question_answer_list_to_dict(qa_list: typing.List[str]):
-    if len(qa_list) % 2 == 0:
-        raise ValueError("The question/answer list must have odd length.")
-    if len(qa_list) == 1:
-        return {"str": qa_list[0]}
-    return {
-        "str": qa_list[0],
-        "pass": qa_list[1],
-        "rest": question_answer_list_to_dict(qa_list[2:]),
-    }
 
 
 def _advertisement() -> str:
