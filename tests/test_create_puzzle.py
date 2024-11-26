@@ -175,18 +175,6 @@ def test_wrong_answers(
     assert not res.stderr
 
 
-def get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
-    cur_input = 0
-
-    def _input_simulator() -> str:
-        nonlocal cur_input
-        res = answers[cur_input]
-        cur_input += 1
-        return res
-
-    return _input_simulator
-
-
 def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
     cur_input = 0
 
