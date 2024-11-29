@@ -23,7 +23,13 @@ def _advertisement() -> str:
 
 def _str_to_code(in_str: str, max_len: int, quotes: str) -> str:
     return "\n".join(
-        quotes + line + quotes for line in textwrap.wrap(in_str, width=max_len)
+        quotes + line + quotes
+        for line in textwrap.wrap(
+            in_str,
+            width=max_len,
+            replace_whitespace=False,  # Preserves embedded whitespace like `\n`
+            drop_whitespace=False,  # Keeps leading/trailing spaces
+        )
     )
 
 
