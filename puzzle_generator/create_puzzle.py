@@ -1,5 +1,6 @@
 import inspect
 import typing
+import textwrap
 import importlib.metadata
 
 import black
@@ -20,14 +21,16 @@ def _advertisement() -> str:
 """
 
 
-def _split_long_str(in_str: str, max_len: int) -> typing.List[str]:
-    if len(in_str) < max_len:
-        return [in_str]
-    return [in_str[:max_len]] + _split_long_str(in_str[max_len:], max_len)
-
-
 def _str_to_code(in_str: str, max_len: int, quotes: str) -> str:
-    return "\n".join(quotes + _ + quotes for _ in _split_long_str(in_str, max_len))
+    return "\n".join(
+        quotes + line + quotes
+        for line in textwrap.wrap(
+            in_str,
+            width=max_len,
+            replace_whitespace=False,  # Preserves embedded whitespace like `\n`
+            drop_whitespace=False,  # Keeps leading/trailing spaces
+        )
+    )
 
 
 def _create_str(in_encrypted_puzzle, configurator) -> str:
