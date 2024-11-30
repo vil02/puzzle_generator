@@ -11,14 +11,14 @@ from .common import (
 )
 
 
-def must_be_nonempty(in_list: typing.List[bytes]) -> None:
+def must_be_nonempty(in_list: list[bytes]) -> None:
     if not in_list:
         raise ValueError("in_list must be nonempty")
 
 
 def get_encrypt(
-    proc_spices: typing.List[bytes],
-    signature_spices: typing.List[bytes],
+    proc_spices: list[bytes],
+    signature_spices: list[bytes],
     scrypt_params,
     signature_params,
 ) -> typing.Callable[[bytes, bytes], bytes]:
@@ -39,8 +39,8 @@ def get_encrypt(
 
 
 def get_decrypt(
-    proc_spices: typing.List[bytes],
-    signature_spices: typing.List[bytes],
+    proc_spices: list[bytes],
+    signature_spices: list[bytes],
     scrypt_params,
     signature_params,
 ) -> typing.Callable[[bytes, bytes], bytes | None]:
