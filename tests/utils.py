@@ -43,7 +43,7 @@ SOME_SIGNATURE_PARAMS = [{"digest": _} for _ in _SOME_HASHES]
 
 def _get_simple_encrypt_decrypt_pair(
     *args,
-) -> typing.Tuple[
+) -> tuple[
     typing.Callable[[bytes, bytes], bytes],
     typing.Callable[[bytes, bytes], bytes | None],
 ]:
@@ -52,7 +52,7 @@ def _get_simple_encrypt_decrypt_pair(
 
 def _get_spiced_simple_encrypt_decrypt_pair(
     *args,
-) -> typing.Tuple[
+) -> tuple[
     typing.Callable[[bytes, bytes], bytes],
     typing.Callable[[bytes, bytes], bytes | None],
 ]:

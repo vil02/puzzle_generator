@@ -34,7 +34,7 @@ def join(in_str: str, in_bytes: bytes) -> bytes:
     return int_to_bytes(len(str_as_bytes)) + str_as_bytes + in_bytes
 
 
-def split(in_bytes: bytes) -> typing.Tuple[str, bytes]:
+def split(in_bytes: bytes) -> tuple[str, bytes]:
     end_of_length = int(in_bytes[0]) + 1
     str_as_bytes_len = bytes_to_int(in_bytes[:end_of_length])
     end_of_str = end_of_length + str_as_bytes_len
