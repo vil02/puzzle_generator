@@ -1,5 +1,4 @@
 import inspect
-import typing
 import textwrap
 import importlib.metadata
 
@@ -61,7 +60,7 @@ def _create_str(in_encrypted_puzzle, configurator) -> str:
     )
 
 
-def create(qa_list: typing.List[str], **kwargs) -> str:
+def create(qa_list: list[str], **kwargs) -> str:
     puzzle = question_answer_list_to_dict(qa_list)
     configurator = configurators.get_configurator(**kwargs)
     encrypted_puzzle = encrypt_data(puzzle, configurator.get_encrypt())

@@ -1,5 +1,4 @@
 import secrets
-import typing
 
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
@@ -11,11 +10,11 @@ def _get_some_spices():
     return [secrets.token_bytes(3) for _ in range(20)]
 
 
-def _list_of_bytes_to_str(in_list: typing.List[bytes]) -> str:
+def _list_of_bytes_to_str(in_list: list[bytes]) -> str:
     return str([bu.bytes_to_bytestr(_) for _ in in_list])
 
 
-def _list_of_bytes_to_codestr(in_list: typing.List[bytes]) -> str:
+def _list_of_bytes_to_codestr(in_list: list[bytes]) -> str:
     raw: str = _list_of_bytes_to_str(in_list)
     return f"[bytestr_to_bytes(_) for _ in {raw}]"
 
@@ -31,7 +30,7 @@ class Spiced:
         self._proc_spices = kwargs.get("proc_spices", _get_some_spices())
         self._signature_spices = kwargs.get("signature_spices", _get_some_spices())
 
-    def get_modules(self) -> typing.List[str]:
+    def get_modules(self) -> list[str]:
         return csc.MODULES
 
     def get_encrypt(self):

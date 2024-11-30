@@ -23,15 +23,15 @@ _PuzzleTestCase = collections.namedtuple(
 )
 
 
-def _get_input(qa_list: typing.List[str]) -> typing.List[str]:
+def _get_input(qa_list: list[str]) -> list[str]:
     return [_ for num, _ in enumerate(qa_list) if num % 2 == 1]
 
 
-def _get_positive_output(qa_list: typing.List[str]) -> str:
+def _get_positive_output(qa_list: list[str]) -> str:
     return "\n".join(_ for num, _ in enumerate(qa_list) if num % 2 == 0) + "\n"
 
 
-def _positive_puzzle_tc(qa_list: typing.List[str]) -> _PuzzleTestCase:
+def _positive_puzzle_tc(qa_list: list[str]) -> _PuzzleTestCase:
     return _PuzzleTestCase(
         qa_list=qa_list, input=_get_input(qa_list), output=_get_positive_output(qa_list)
     )
@@ -175,7 +175,7 @@ def test_wrong_answers(
     assert not res.stderr
 
 
-def _get_input_simulator(answers: typing.List[str]) -> typing.Callable[[], str]:
+def _get_input_simulator(answers: list[str]) -> typing.Callable[[], str]:
     cur_input = 0
 
     def _input_simulator() -> str:

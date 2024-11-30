@@ -1,5 +1,3 @@
-import typing
-
 from ...encryption_algorithms.simple import simple as se
 from . import common as csc
 from ..check_kwargs import check_kwargs
@@ -11,7 +9,7 @@ class Simple:
         self._scrypt_params = csc.scrypt_params(**kwargs)
         self._signature_params = csc.signature_params(**kwargs)
 
-    def get_modules(self) -> typing.List[str]:
+    def get_modules(self) -> list[str]:
         return csc.MODULES
 
     def get_encrypt(self):
