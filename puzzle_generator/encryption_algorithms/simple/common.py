@@ -1,6 +1,5 @@
 import hmac
 import hashlib
-import typing
 
 
 def digest_size(params) -> int:
@@ -27,7 +26,7 @@ def merge_data_and_signature(in_data: bytes, in_signature: bytes) -> bytes:
 
 def split_data_and_signature(
     in_bytes: bytes, signature_size: int
-) -> typing.Tuple[bytes, bytes]:
+) -> tuple[bytes, bytes]:
     if len(in_bytes) < signature_size:
         raise ValueError("in_bytes is shorter than signature_size")
     data = in_bytes[:-signature_size]

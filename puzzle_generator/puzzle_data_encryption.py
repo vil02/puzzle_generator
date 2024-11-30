@@ -5,7 +5,7 @@ from .bytes_utils import join, split
 
 def encrypt_data(
     in_data, in_encrypt: typing.Callable[[bytes, bytes], bytes]
-) -> typing.Tuple[str, bytes]:
+) -> tuple[str, bytes]:
     if list(in_data.keys()) == ["str"]:
         return in_data["str"], bytes()
     tmp = encrypt_data(in_data["rest"], in_encrypt)
@@ -18,7 +18,7 @@ def decrypt_data(
     in_rest: bytes,
     in_pass: str,
     in_decrypt: typing.Callable[[bytes, bytes], bytes | None],
-) -> None | typing.Tuple[str, bytes]:
+) -> None | tuple[str, bytes]:
     res = in_decrypt(in_rest, in_pass.encode())
     if res is None:
         return None
