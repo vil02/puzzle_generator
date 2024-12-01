@@ -17,7 +17,7 @@ black = "24.10.0"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-pytest = "8.3.3"
+pytest = "8.3.4"
 pylint = "3.3.1"
 flake8 = "7.1.1"
 flake8-bugbear = "24.10.31"
