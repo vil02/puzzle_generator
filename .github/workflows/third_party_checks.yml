@@ -35,18 +35,11 @@ jobs:
         run: |
           ./generate_coverage_data.sh
 
-      - name: Fix code coverage paths for SonarCloud
-        # yamllint disable rule:line-length
-        run: |
-          cp coverage.xml coverage_for_sonarcloud.xml
-          sed -i 's/\/home\/runner\/work\/puzzle_generator\/puzzle_generator/\/github\/workspace/g' coverage_for_sonarcloud.xml
-        # yamllint enable rule:line-length
-
       - name: SonarCloud Scan
         if: "! github.event.pull_request.head.repo.fork "
-        uses: SonarSource/sonarcloud-github-action@v4
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Upload coverage report to Codecov
