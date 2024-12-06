@@ -23,6 +23,12 @@ do
         printf "Checking with mypy:\n%s\n" "${mypy_output}"
         exit_code=1
     }
+
+    xenon_output=$(poetry run xenon --max-absolute A --max-modules A --max-average A "${cur_file}" 2>&1) || {
+        printf "Checking \"%s\"\n" "${cur_file}"
+        printf "Checking with xenon:\n%s\n" "${xenon_output}"
+        exit_code=1
+    }
 done
 
 if [[ ${exit_code} -eq 0 ]] ; then
