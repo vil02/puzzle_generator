@@ -26,6 +26,7 @@ ruff = "0.8.2"
 coverage = "7.6.9"
 mypy = "1.13.0"
 bandit = "1.8.0"
+xenon = "0.9.3"
 
 [build-system]
 requires = ["poetry-core"]
