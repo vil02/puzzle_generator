@@ -13,19 +13,16 @@ do
     }
 
     flake8_output=$(poetry run flake8 "${cur_file}" --count --max-line-length=88 --show-source --ignore=E203,W503 2>&1) || {
-        printf "Checking \"%s\"\n" "${cur_file}"
         printf "Checking with flake8:\n%s\n" "${flake8_output}"
         exit_code=1
     }
 
     mypy_output=$(poetry run mypy "${cur_file}" 2>&1) || {
-        printf "Checking \"%s\"\n" "${cur_file}"
         printf "Checking with mypy:\n%s\n" "${mypy_output}"
         exit_code=1
     }
 
     xenon_output=$(poetry run xenon --max-absolute A --max-modules A --max-average A "${cur_file}" 2>&1) || {
-        printf "Checking \"%s\"\n" "${cur_file}"
         printf "Checking with xenon:\n%s\n" "${xenon_output}"
         exit_code=1
     }
