@@ -1,10 +1,12 @@
+import typing
+
 from ...encryption_algorithms.simple import simple as se
 from . import common as csc
 from ..check_kwargs import check_kwargs
 
 
 class Simple:
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         check_kwargs({"scrypt_params", "signature_params"}, **kwargs)
         self._scrypt_params = csc.scrypt_params(**kwargs)
         self._signature_params = csc.signature_params(**kwargs)
@@ -12,7 +14,7 @@ class Simple:
     def get_modules(self) -> list[str]:
         return csc.MODULES
 
-    def get_encrypt(self):
+    def get_encrypt(self) -> typing.Callable[[bytes, bytes], bytes]:
         return se.get_encrypt(self._scrypt_params, self._signature_params)
 
     def get_needed_objects(self):
