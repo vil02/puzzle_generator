@@ -1,4 +1,4 @@
-def check_kwargs(allowed_params, **kwargs):
+def check_kwargs(allowed_params, **kwargs) -> None:
     for cur_param in kwargs:
         if cur_param not in allowed_params:
             raise TypeError(

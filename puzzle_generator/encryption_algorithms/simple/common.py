@@ -11,7 +11,7 @@ def sign_bytes(in_bytes: bytes, in_key: bytes, params) -> bytes:
     return hmac.digest(msg=in_bytes, key=in_key, **params)
 
 
-def derive_key(**kwargs):
+def derive_key(**kwargs) -> bytes:
     return hashlib.scrypt(**kwargs)
 
 

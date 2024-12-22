@@ -1,4 +1,5 @@
 import secrets
+import typing
 
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
@@ -6,7 +7,7 @@ from . import common as csc
 from ..check_kwargs import check_kwargs
 
 
-def _get_some_spices():
+def _get_some_spices() -> list[bytes]:
     return [secrets.token_bytes(3) for _ in range(20)]
 
 
@@ -20,7 +21,7 @@ def _list_of_bytes_to_codestr(in_list: list[bytes]) -> str:
 
 
 class Spiced:
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         check_kwargs(
             {"scrypt_params", "signature_params", "proc_spices", "signature_spices"},
             **kwargs,
@@ -33,7 +34,7 @@ class Spiced:
     def get_modules(self) -> list[str]:
         return csc.MODULES
 
-    def get_encrypt(self):
+    def get_encrypt(self) -> typing.Callable[[bytes, bytes], bytes]:
         return sse.get_encrypt(
             self._proc_spices,
             self._signature_spices,
