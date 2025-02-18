@@ -35,6 +35,14 @@ jobs:
           poetry export --format=requirements.txt --output=requirements.txt
           poetry export --with dev --format=requirements.txt --output=dev-requirements.txt
 
+      - name: Save as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: requirements-files
+          path: |
+            requirements.txt
+            dev-requirements.txt
+
       - name: Run pip-audit
         uses: pypa/gh-action-pip-audit@v1.1.0
         with:
