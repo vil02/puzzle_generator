@@ -37,7 +37,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: "! github.event.pull_request.head.repo.fork "
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
