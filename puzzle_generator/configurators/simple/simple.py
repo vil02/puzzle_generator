@@ -1,7 +1,7 @@
 import typing
 
 from ...encryption_algorithms.simple import simple as se
-from . import common as csc
+from . import cfs_common as csc
 from ..check_kwargs import check_kwargs
 
 
