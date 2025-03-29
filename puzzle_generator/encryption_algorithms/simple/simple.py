@@ -1,7 +1,7 @@
 import typing
 
 
-from .common import (
+from .eas_common import (
     derive_key,
     xor_bytes,
     sign_bytes,

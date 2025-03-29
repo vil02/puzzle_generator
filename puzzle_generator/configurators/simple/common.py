@@ -1,6 +1,6 @@
 import secrets
 
-from ...encryption_algorithms.simple import common
+from ...encryption_algorithms.simple import eas_common
 from ... import bytestr_utils as bsu
 from ... import bytes_utils as bu
 from ... import puzzle_data_encryption as pde
@@ -9,11 +9,11 @@ from ... import run_puzzle as rp
 MODULES = ["hmac", "hashlib", "base64", "sys", "typing"]
 
 OBJECTS = [
-    common.sign_bytes,
-    common.derive_key,
-    common.split_data_and_signature,
-    common.digest_size,
-    common.xor_bytes,
+    eas_common.sign_bytes,
+    eas_common.derive_key,
+    eas_common.split_data_and_signature,
+    eas_common.digest_size,
+    eas_common.xor_bytes,
     bsu.bytestr_to_bytes,
     bu.bytes_to_int,
     bu.split,
