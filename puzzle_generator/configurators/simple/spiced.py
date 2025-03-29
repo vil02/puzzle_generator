@@ -3,7 +3,7 @@ import typing
 
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
-from . import common as csc
+from . import cfs_common as csc
 from ..check_kwargs import check_kwargs
 
 
