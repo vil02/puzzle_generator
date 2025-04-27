@@ -13,6 +13,8 @@ name: all_url_check
 jobs:
   run_lychee:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
