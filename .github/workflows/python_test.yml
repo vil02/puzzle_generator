@@ -13,6 +13,8 @@ name: python_test
 jobs:
   python_test:
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -46,6 +48,8 @@ jobs:
 
   check_examples:
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:

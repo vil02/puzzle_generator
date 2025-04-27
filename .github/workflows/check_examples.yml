@@ -13,6 +13,8 @@ name: check_examples
 jobs:
   check_examples:
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:

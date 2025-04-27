@@ -13,6 +13,8 @@ name: pip_audit
 jobs:
   pip_audit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
