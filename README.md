@@ -27,7 +27,7 @@ pip install puzzle-generator
 ## Information for developers
 
 The project is setup using [poetry](https://python-poetry.org/).
-In order to create a _develompent enviroment_,
+In order to create a _development environment_,
 after cloning this repository, run the command:
 
 ```shell
