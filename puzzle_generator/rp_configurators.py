@@ -42,18 +42,14 @@ class _WithHintsConfigurator:
         self.hints = in_hints
 
     def get_needed_objects(self):
-        res = [get_proc_answer, rp.run_puzzle, rp.run_puzzle_with_hints]
-        for _ in set(self.hints):
-            if _ is not None:
-                res.append(_)
-        return res
+        return [get_proc_answer, rp.run_puzzle, rp.run_puzzle_with_hints] + [
+            _ for _ in set(self.hints) if _ is not None
+        ]
 
     def puzzle_data(self, question: str, rest_str: str) -> str:
         hints_str = ", ".join(_get_name(_) for _ in self.hints)
         hints = f"[{hints_str}]"
-        res_a = f"_HINTS = {hints}"
-        res_b = f"_PUZZLE = ({question}, bytestr_to_bytes({rest_str}))"
-        return "\n".join((res_a, res_b))
+        return f"_HINTS = {hints}\n_PUZZLE = ({question}, bytestr_to_bytes({rest_str}))"
 
     def call(self) -> str:
         return (
