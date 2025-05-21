@@ -10,13 +10,14 @@ import puzzle_generator.create_puzzle as cp
 import puzzle_generator.run_puzzle as rp
 import puzzle_generator.puzzle_data_creators as pdc
 import puzzle_generator.puzzle_data_encryption as pde
+import puzzle_generator.rp_configurators as rpc
 
 from . import utils
 
 _PuzzleTestCase = collections.namedtuple(
     "_PuzzleTestCase",
     [
-        "qa_list",
+        "puzzle_description",
         "input",
         "output",
     ],
@@ -33,7 +34,9 @@ def _get_positive_output(qa_list: list[str]) -> str:
 
 def _positive_puzzle_tc(qa_list: list[str]) -> _PuzzleTestCase:
     return _PuzzleTestCase(
-        qa_list=qa_list, input=_get_input(qa_list), output=_get_positive_output(qa_list)
+        puzzle_description=qa_list,
+        input=_get_input(qa_list),
+        output=_get_positive_output(qa_list),
     )
 
 
@@ -61,24 +64,65 @@ _QA_LIST_2 = [
     "😄",
 ]
 
-_POSITIVE_PUZZLE_TCS = [
+
+def _must_be_int(in_str: str) -> str:
+    return str(int(in_str))
+
+
+def _first_must_be_lower(in_str: str) -> str:
+    return in_str[0].lower() + in_str[1:]
+
+
+_PUZZLE_WITH_HINTS = [
+    ("What is 2+3?", "5", _must_be_int),
+    ("Question 2?", "answer", _first_must_be_lower),
+    ("Last question!", "yeah!", None),
+    "Congratulations!",
+]
+
+
+def _expected_output_from_puzzle_with_hints(puzzle_with_hints) -> str:
+    return (
+        "\n".join(_[0] for _ in puzzle_with_hints[:-1])
+        + "\n"
+        + puzzle_with_hints[-1]
+        + "\n"
+    )
+
+
+_POSITIVE_PUZZLE_TCS_NO_HINTS = [
     _positive_puzzle_tc(_QA_LIST_1),
     _positive_puzzle_tc(_QA_LIST_2),
 ]
 
+_POSITIVE_PUZZLE_TCS_WITH_HINTS = [
+    _PuzzleTestCase(
+        _PUZZLE_WITH_HINTS,
+        ["5", "answer", "yeah!"],
+        _expected_output_from_puzzle_with_hints(_PUZZLE_WITH_HINTS),
+    ),
+    _PuzzleTestCase(
+        _PUZZLE_WITH_HINTS,
+        ["5", "Answer", "yeah!"],
+        _expected_output_from_puzzle_with_hints(_PUZZLE_WITH_HINTS),
+    ),
+]
+
+_POSITIVE_PUZZLE_TCS = _POSITIVE_PUZZLE_TCS_NO_HINTS + _POSITIVE_PUZZLE_TCS_WITH_HINTS
+
 _NEGATIVE_PUZZLE_TCS = [
     _PuzzleTestCase(
-        qa_list=_QA_LIST_1,
+        puzzle_description=_QA_LIST_1,
         input=["Answer 1", "This is a wrong answer"],
         output="Question 1?\nQuestion 2?\nThis is a wrong answer. Try again!\n",
     ),
     _PuzzleTestCase(
-        qa_list=_QA_LIST_1,
+        puzzle_description=_QA_LIST_1,
         input=["This is a wrong answer"],
         output="Question 1?\nThis is a wrong answer. Try again!\n",
     ),
     _PuzzleTestCase(
-        qa_list=_QA_LIST_2,
+        puzzle_description=_QA_LIST_2,
         input=["Wrong!"],
         output=_MULTILINE_QUESTION
         + """
@@ -118,6 +162,7 @@ def _run_puzzle_str(
         in in_puzzle
     )
     assert all(len(_) <= 88 for _ in in_puzzle.splitlines())
+    print(in_puzzle_path)
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
@@ -153,7 +198,7 @@ def test_all_good_answers(
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
-    puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
+    puzzle: str = cp.create(puzzle_tc.puzzle_description, **configuration)
     res = _run_puzzle_str(puzzle, puzzle_tc.input, puzzle_path)
 
     assert res.returncode == 0
@@ -168,7 +213,7 @@ def test_wrong_answers(
     puzzle_path: pathlib.Path,
     configuration,
 ) -> None:
-    puzzle: str = cp.create(puzzle_tc.qa_list, **configuration)
+    puzzle: str = cp.create(puzzle_tc.puzzle_description, **configuration)
     res = _run_puzzle_str(puzzle, puzzle_tc.input, puzzle_path)
     assert res.returncode == 1
     assert res.stdout == puzzle_tc.output
@@ -188,7 +233,7 @@ def _get_input_simulator(answers: list[str]) -> typing.Callable[[], str]:
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
-@pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS)
+@pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS_NO_HINTS)
 def test_run_puzzle_all_good_answers(
     capsys,
     puzzle_tc: _PuzzleTestCase,
@@ -196,7 +241,7 @@ def test_run_puzzle_all_good_answers(
     decrypt: typing.Callable[[bytes, bytes], bytes | None],
 ) -> None:
     encrypted_puzzle = pde.encrypt_data(
-        pdc.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+        pdc.question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
     )
     rp.run_puzzle(encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.input))
     captured = capsys.readouterr()
@@ -209,7 +254,7 @@ def test_run_puzzle_wrong_answers(
     capsys, puzzle_tc: _PuzzleTestCase, encrypt, decrypt
 ) -> None:
     encrypted_puzzle = pde.encrypt_data(
-        pdc.question_answer_list_to_dict(puzzle_tc.qa_list), encrypt
+        pdc.question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
     )
     with pytest.raises(SystemExit) as exc_info:
         rp.run_puzzle(
@@ -221,3 +266,35 @@ def test_run_puzzle_wrong_answers(
     assert captured.out == puzzle_tc.output
     assert exc_info.type is SystemExit
     assert exc_info.value.code == 1
+
+
+@pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS_WITH_HINTS)
+def test_run_puzzle_with_hints_all_good_answers(
+    capsys,
+    puzzle_tc: _PuzzleTestCase,
+    encrypt: typing.Callable[[bytes, bytes], bytes],
+    decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> None:
+    qa_list, hints = cp.extract_qa_list_and_hints(puzzle_tc.puzzle_description)
+    encrypted_puzzle = pde.encrypt_data(
+        pdc.question_answer_list_to_dict(qa_list), encrypt
+    )
+    rp.run_puzzle_with_hints(
+        encrypted_puzzle,
+        decrypt,
+        _get_input_simulator(puzzle_tc.input),
+        rpc.get_proc_answer(hints),
+    )
+    captured = capsys.readouterr()
+    assert captured.out == puzzle_tc.output
+
+
+def test_create_raises_for_wrong_input() -> None:
+    puzzle_description = [("Q1", "A1", None), ("Q2", "A2", None)]
+    with pytest.raises(
+        ValueError,
+        match="In case of puzzle with hints, "
+        "the last entry of the puzzle_description must be a string",
+    ):
+        cp.create(puzzle_description)
