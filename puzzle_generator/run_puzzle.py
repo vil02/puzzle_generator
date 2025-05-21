@@ -19,3 +19,12 @@ def run_puzzle(
             sys.exit(1)
         else:
             run_puzzle(new_puzzle, in_decrypt, get_answer)
+
+
+def run_puzzle_with_hints(
+    in_puzzle: tuple[str, bytes],
+    in_decrypt: typing.Callable[[bytes, bytes], bytes | None],
+    get_answer: typing.Callable[[], str],
+    proc_answer: typing.Callable[[str], str],
+) -> None:
+    run_puzzle(in_puzzle, in_decrypt, lambda: proc_answer(get_answer()))
