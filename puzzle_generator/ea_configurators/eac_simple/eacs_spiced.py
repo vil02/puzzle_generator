@@ -3,7 +3,7 @@ import typing
 
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
-from . import cfs_common as csc
+from . import eacs_common as eacs
 from ..check_kwargs import check_kwargs
 
 
@@ -20,19 +20,19 @@ def _list_of_bytes_to_codestr(in_list: list[bytes]) -> str:
     return f"[bytestr_to_bytes(_) for _ in {raw}]"
 
 
-class Spiced:
+class EacsSpiced:
     def __init__(self, **kwargs) -> None:
         check_kwargs(
             {"scrypt_params", "signature_params", "proc_spices", "signature_spices"},
             **kwargs,
         )
-        self._scrypt_params = csc.scrypt_params(**kwargs)
-        self._signature_params = csc.signature_params(**kwargs)
+        self._scrypt_params = eacs.scrypt_params(**kwargs)
+        self._signature_params = eacs.signature_params(**kwargs)
         self._proc_spices = kwargs.get("proc_spices", _get_some_spices())
         self._signature_spices = kwargs.get("signature_spices", _get_some_spices())
 
     def get_modules(self) -> list[str]:
-        return csc.MODULES
+        return eacs.MODULES
 
     def get_encrypt(self) -> typing.Callable[[bytes, bytes], bytes]:
         return sse.get_encrypt(
@@ -43,7 +43,7 @@ class Spiced:
         )
 
     def get_needed_objects(self):
-        return csc.OBJECTS + [
+        return eacs.OBJECTS + [
             sse.must_be_nonempty,
             sse.get_decrypt,
         ]
@@ -57,7 +57,7 @@ class Spiced:
         signature_spices: str = (
             f"_SIGNATURE_SPICES = {_list_of_bytes_to_codestr(self._signature_spices)}"
         )
-        _scrypt_params = csc.scrypt_params_to_code_str(**self._scrypt_params)
+        _scrypt_params = eacs.scrypt_params_to_code_str(**self._scrypt_params)
         _signature_params = "_SIGNATURE_PARAMS = " + repr(self._signature_params)
         decrypt: str = (
             "_DECRYPT = get_decrypt("
