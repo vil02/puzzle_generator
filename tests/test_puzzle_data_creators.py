@@ -60,3 +60,43 @@ def test_question_answer_list_to_dict_raises_when_input_list_has_even_length(
         ValueError, match="The question/answer list must have odd length."
     ):
         pdc.question_answer_list_to_dict(wrong_qa_list)
+
+
+def _some_hint_fun_0(in_str: str) -> str:
+    return in_str + in_str
+
+
+def _some_hint_fun_1(in_str: str) -> str:
+    return in_str + "?"
+
+
+@pytest.mark.parametrize(
+    ("puzzle_description", "expected"),
+    [
+        (["Q1", "A1", "Q2", "A3", "Final"], (["Q1", "A1", "Q2", "A3", "Final"], [])),
+        (
+            [
+                ("Q1", "A1", _some_hint_fun_0),
+                ("Q2", "A2", _some_hint_fun_1),
+                ("Q3", "A3", None),
+                "end!",
+            ],
+            (
+                ["Q1", "A1", "Q2", "A2", "Q3", "A3", "end!"],
+                [_some_hint_fun_0, _some_hint_fun_1, None],
+            ),
+        ),
+    ],
+)
+def test_extract_qa_list_and_hints(puzzle_description, expected) -> None:
+    assert pdc.extract_qa_list_and_hints(puzzle_description) == expected
+
+
+def test_extract_qa_list_and_hints_raises_for_wrong_input() -> None:
+    puzzle_description = [("Q1", "A1", None), ("Q2", "A2", None)]
+    with pytest.raises(
+        ValueError,
+        match="In case of puzzle with hints, "
+        "the last entry of the puzzle_description must be a string",
+    ):
+        pdc.extract_qa_list_and_hints(puzzle_description)

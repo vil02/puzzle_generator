@@ -6,7 +6,10 @@ import importlib.metadata
 import black
 
 from .puzzle_data_encryption import encrypt_data
-from .puzzle_data_creators import question_answer_list_to_dict
+from .puzzle_data_creators import (
+    question_answer_list_to_dict,
+    extract_qa_list_and_hints,
+)
 from .configurators import configurators
 from . import rp_configurators
 from . import bytestr_utils
@@ -62,26 +65,6 @@ def _create_str(in_encrypted_puzzle, configurator, rp_configurator) -> str:
     )
 
 
-def extract_qa_list_and_hints(
-    puzzle_description: typing.Sequence[
-        tuple[str, str, typing.Callable[[str], str] | None] | str
-    ],
-) -> tuple[list[str], list[typing.Callable[[str], str] | None]]:
-    qa_list: list[str] = []
-    hints: list[typing.Callable[[str], str] | None] = []
-    for _ in puzzle_description[:-1]:
-        question, answer, hint = _
-        qa_list += [question, answer]
-        hints.append(hint)
-    if not isinstance(puzzle_description[-1], str):
-        raise ValueError(
-            "In case of puzzle with hints, "
-            "the last entry of the puzzle_description must be a string"
-        )
-    qa_list.append(puzzle_description[-1])
-    return qa_list, hints
-
-
 def create(
     puzzle_description: (
         list[str]
@@ -89,15 +72,7 @@ def create(
     ),
     **kwargs,
 ) -> str:
-    if isinstance(puzzle_description, list) and all(
-        isinstance(_, str) for _ in puzzle_description
-    ):
-        qa_list: list[str] = puzzle_description
-        hints: list[typing.Callable[[str], str] | None] = [
-            None for _ in range(len(qa_list) // 2 + 1)
-        ]
-    else:
-        qa_list, hints = extract_qa_list_and_hints(puzzle_description)
+    qa_list, hints = extract_qa_list_and_hints(puzzle_description)
 
     puzzle = question_answer_list_to_dict(qa_list)
     configurator = configurators.get_configurator(**kwargs)
