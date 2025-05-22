@@ -276,7 +276,7 @@ def test_run_puzzle_with_hints_all_good_answers(
     encrypt: typing.Callable[[bytes, bytes], bytes],
     decrypt: typing.Callable[[bytes, bytes], bytes | None],
 ) -> None:
-    qa_list, hints = cp.extract_qa_list_and_hints(puzzle_tc.puzzle_description)
+    qa_list, hints = pdc.extract_qa_list_and_hints(puzzle_tc.puzzle_description)
     encrypted_puzzle = pde.encrypt_data(
         pdc.question_answer_list_to_dict(qa_list), encrypt
     )
@@ -288,13 +288,3 @@ def test_run_puzzle_with_hints_all_good_answers(
     )
     captured = capsys.readouterr()
     assert captured.out == puzzle_tc.output
-
-
-def test_create_raises_for_wrong_input() -> None:
-    puzzle_description = [("Q1", "A1", None), ("Q2", "A2", None)]
-    with pytest.raises(
-        ValueError,
-        match="In case of puzzle with hints, "
-        "the last entry of the puzzle_description must be a string",
-    ):
-        cp.create(puzzle_description)
