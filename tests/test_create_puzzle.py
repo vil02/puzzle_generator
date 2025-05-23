@@ -163,7 +163,6 @@ def _run_puzzle_str(
         in in_puzzle
     )
     assert all(len(_) <= 88 for _ in in_puzzle.splitlines())
-    print(in_puzzle_path)
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
