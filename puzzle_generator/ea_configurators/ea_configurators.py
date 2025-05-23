@@ -1,5 +1,4 @@
-from .eac_simple import eacs_simple
-from .eac_simple import eacs_spiced
+from .eac_simple import eacs_simple, eacs_spiced
 
 
 def get_ea_configurator(**kwargs):

@@ -1,16 +1,17 @@
+import collections
+import importlib.metadata
 import pathlib
 import subprocess  # nosec B404
 import typing
-import collections
-import importlib.metadata
+
 import black
 import pytest
 
 import puzzle_generator.create_puzzle as cp
-import puzzle_generator.run_puzzle as rp
 import puzzle_generator.puzzle_data_creators as pdc
 import puzzle_generator.puzzle_data_encryption as pde
 import puzzle_generator.rp_configurators as rpc
+import puzzle_generator.run_puzzle as rp
 
 from . import utils
 

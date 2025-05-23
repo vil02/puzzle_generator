@@ -1,5 +1,5 @@
-import hmac
 import hashlib
+import hmac
 
 
 def digest_size(params) -> int:

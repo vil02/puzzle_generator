@@ -1,6 +1,5 @@
 import typing
 
-
 BYTEORDER: typing.Literal["little", "big"] = "little"
 
 

@@ -1,6 +1,7 @@
 import pytest
 
 import puzzle_generator.bytestr_utils as bu
+
 from . import utils
 
 

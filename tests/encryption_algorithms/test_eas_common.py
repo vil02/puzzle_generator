@@ -1,6 +1,7 @@
 import pytest
 
 import puzzle_generator.encryption_algorithms.simple.eas_common as eas_c
+
 from .. import utils
 
 

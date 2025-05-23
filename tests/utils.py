@@ -1,10 +1,9 @@
-import string
 import itertools
+import string
 import typing
 
 import puzzle_generator.encryption_algorithms.simple.simple as se
 import puzzle_generator.encryption_algorithms.simple.spiced as sse
-
 
 STRS = [
     "",
