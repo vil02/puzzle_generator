@@ -1,7 +1,6 @@
 import pytest
 
-from puzzle_generator.ea_configurators.eac_simple import eacs_simple
-from puzzle_generator.ea_configurators.eac_simple import eacs_spiced
+from puzzle_generator.ea_configurators.eac_simple import eacs_simple, eacs_spiced
 
 
 @pytest.mark.parametrize(

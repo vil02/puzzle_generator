@@ -1,18 +1,17 @@
+import importlib.metadata
 import inspect
 import textwrap
 import typing
-import importlib.metadata
 
 import black
 
-from .puzzle_data_encryption import encrypt_data
-from .puzzle_data_creators import (
-    question_answer_list_to_dict,
-    extract_qa_list_and_hints,
-)
+from . import bytestr_utils, rp_configurators
 from .ea_configurators import ea_configurators
-from . import rp_configurators
-from . import bytestr_utils
+from .puzzle_data_creators import (
+    extract_qa_list_and_hints,
+    question_answer_list_to_dict,
+)
+from .puzzle_data_encryption import encrypt_data
 
 
 def _advertisement() -> str:

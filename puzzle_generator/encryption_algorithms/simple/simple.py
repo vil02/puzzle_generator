@@ -1,13 +1,12 @@
 import typing
 
-
 from .eas_common import (
     derive_key,
-    xor_bytes,
-    sign_bytes,
     digest_size,
     merge_data_and_signature,
+    sign_bytes,
     split_data_and_signature,
+    xor_bytes,
 )
 
 

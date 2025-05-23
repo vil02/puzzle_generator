@@ -3,8 +3,8 @@ import typing
 
 from ... import bytestr_utils as bu
 from ...encryption_algorithms.simple import spiced as sse
-from . import eacs_common as eacs
 from ..check_kwargs import check_kwargs
+from . import eacs_common as eacs
 
 
 def _get_some_spices() -> list[bytes]:
