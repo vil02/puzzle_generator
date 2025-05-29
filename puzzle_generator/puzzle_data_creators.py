@@ -21,6 +21,13 @@ def _qa_list_and_hints_from_puzzle_with_hints(
     qa_list: list[str] = []
     hints: list[typing.Callable[[str], str] | None] = []
     for _ in puzzle_description[:-1]:
+        if isinstance(_, str):
+            raise ValueError(
+                "In case of puzzle with hints, "
+                "all entires besides the last one "
+                "have to be of the type "
+                "tuple[str, str, typing.Callable[[str], str] | None]"
+            )
         question, answer, hint = _
         qa_list += [question, answer]
         hints.append(hint)

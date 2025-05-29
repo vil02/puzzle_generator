@@ -1,3 +1,5 @@
+import typing
+
 import pytest
 
 import puzzle_generator.puzzle_data_creators as pdc
@@ -98,5 +100,19 @@ def test_extract_qa_list_and_hints_raises_for_wrong_input() -> None:
         ValueError,
         match="In case of puzzle with hints, "
         "the last entry of the puzzle_description must be a string",
+    ):
+        pdc.extract_qa_list_and_hints(puzzle_description)
+
+
+def test_extract_qa_list_and_hints_raises_for_other_wrong_input() -> None:
+    puzzle_description: typing.Sequence[
+        tuple[str, str, typing.Callable[[str], str] | None] | str
+    ] = ["Q1", ("Q2", "A2", None), "Final"]
+    with pytest.raises(
+        ValueError,
+        match="In case of puzzle with hints, "
+        "all entires besides the last one "
+        "have to be of the type "
+        "tuple[str, str, typing.Callable[[str], str] | None]",
     ):
         pdc.extract_qa_list_and_hints(puzzle_description)
