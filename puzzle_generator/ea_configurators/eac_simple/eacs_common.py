@@ -5,7 +5,7 @@ from ... import bytestr_utils as bsu
 from ... import puzzle_data_encryption as pde
 from ...encryption_algorithms.simple import eas_common
 
-MODULES = ["hmac", "hashlib", "base64", "sys", "typing"]
+MODULES = ["base64", "hashlib", "hmac", "sys", "typing"]
 
 OBJECTS = [
     eas_common.sign_bytes,
