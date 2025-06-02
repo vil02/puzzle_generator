@@ -5,6 +5,7 @@ import subprocess  # nosec B404
 import typing
 
 import black
+import isort
 import pytest
 
 import puzzle_generator.create_puzzle as cp
@@ -154,15 +155,33 @@ def _run_puzzle_file(
     )
 
 
+def _black_compliant(code: str) -> bool:
+    return code == black.format_str(code, mode=black.FileMode())
+
+
+def _isort_compliant(code: str) -> bool:
+    return code == isort.code(code)
+
+
+def _all_lines_short(code: str) -> bool:
+    return all(len(_) <= 88 for _ in code.splitlines())
+
+
+def _contains_advertisement(code: str) -> bool:
+    return f"puzzle-generator {importlib.metadata.version('puzzle-generator')}" in code
+
+
+def _check_code_statically(code: str) -> None:
+    assert _black_compliant(code)
+    assert _isort_compliant(code)
+    assert _all_lines_short(code)
+    assert _contains_advertisement(code)
+
+
 def _run_puzzle_str(
     in_puzzle: str, answers: list[str], in_puzzle_path: pathlib.Path
 ) -> subprocess.CompletedProcess[str]:
-    assert in_puzzle == black.format_str(in_puzzle, mode=black.FileMode())
-    assert (
-        f"puzzle-generator {importlib.metadata.version('puzzle-generator')}"
-        in in_puzzle
-    )
-    assert all(len(_) <= 88 for _ in in_puzzle.splitlines())
+    _check_code_statically(in_puzzle)
     with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
         puzzle_file.write(in_puzzle)
     return _run_puzzle_file(in_puzzle_path, answers)
