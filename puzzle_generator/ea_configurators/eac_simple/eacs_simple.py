@@ -1,6 +1,6 @@
 import typing
 
-from ...encryption_algorithms.simple import simple as se
+from ...encryption_algorithms.ea_simple import eas_simple
 from ..check_kwargs import check_kwargs
 from . import eacs_common as eacs
 
@@ -15,11 +15,11 @@ class EacsSimple:
         return eacs.MODULES
 
     def get_encrypt(self) -> typing.Callable[[bytes, bytes], bytes]:
-        return se.get_encrypt(self._scrypt_params, self._signature_params)
+        return eas_simple.get_encrypt(self._scrypt_params, self._signature_params)
 
     def get_needed_objects(self):
         return eacs.OBJECTS + [
-            se.get_decrypt,
+            eas_simple.get_decrypt,
         ]
 
     def get_constants_str(

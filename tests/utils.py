@@ -2,8 +2,7 @@ import itertools
 import string
 import typing
 
-import puzzle_generator.encryption_algorithms.simple.simple as se
-import puzzle_generator.encryption_algorithms.simple.spiced as sse
+from puzzle_generator.encryption_algorithms.ea_simple import eas_simple, eas_spiced
 
 STRS = [
     "",
@@ -46,7 +45,7 @@ def _get_simple_encrypt_decrypt_pair(
     typing.Callable[[bytes, bytes], bytes],
     typing.Callable[[bytes, bytes], bytes | None],
 ]:
-    return se.get_encrypt(*args), se.get_decrypt(*args)
+    return eas_simple.get_encrypt(*args), eas_simple.get_decrypt(*args)
 
 
 def _get_spiced_simple_encrypt_decrypt_pair(
@@ -55,7 +54,7 @@ def _get_spiced_simple_encrypt_decrypt_pair(
     typing.Callable[[bytes, bytes], bytes],
     typing.Callable[[bytes, bytes], bytes | None],
 ]:
-    return sse.get_encrypt(*args), sse.get_decrypt(*args)
+    return eas_spiced.get_encrypt(*args), eas_spiced.get_decrypt(*args)
 
 
 ENCRYPT_DECRYPT_PAIRS = [

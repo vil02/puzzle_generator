@@ -2,7 +2,7 @@ import secrets
 import typing
 
 from ... import bytestr_utils as bu
-from ...encryption_algorithms.simple import spiced as sse
+from ...encryption_algorithms.ea_simple import eas_spiced
 from ..check_kwargs import check_kwargs
 from . import eacs_common as eacs
 
@@ -35,7 +35,7 @@ class EacsSpiced:
         return eacs.MODULES
 
     def get_encrypt(self) -> typing.Callable[[bytes, bytes], bytes]:
-        return sse.get_encrypt(
+        return eas_spiced.get_encrypt(
             self._proc_spices,
             self._signature_spices,
             self._scrypt_params,
@@ -44,8 +44,8 @@ class EacsSpiced:
 
     def get_needed_objects(self):
         return eacs.OBJECTS + [
-            sse.must_be_nonempty,
-            sse.get_decrypt,
+            eas_spiced.must_be_nonempty,
+            eas_spiced.get_decrypt,
         ]
 
     def get_constants_str(
