@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/vil02/puzzle_generator/graph/badge.svg?token=C4HUFJ9QJH)](https://codecov.io/gh/vil02/puzzle_generator)
 [![CodeFactor](https://www.codefactor.io/repository/github/vil02/puzzle_generator/badge)](https://www.codefactor.io/repository/github/vil02/puzzle_generator)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0f53341a63914f1f9656782bff0e5089)](https://app.codacy.com/gh/vil02/puzzle_generator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/vil02/puzzle_generator/badge)](https://securityscorecards.dev/viewer/?uri=github.com/vil02/puzzle_generator)
 [![Open in Gitpod](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/vil02/puzzle_generator)
 
 Basic functionality of [`puzzle_generator`](./puzzle_generator) is to generate
