@@ -10,11 +10,12 @@ name: pip_audit
   schedule:
     - cron: '10 2 * * 1,3'
 
+permissions:
+  contents: read
+
 jobs:
   pip_audit:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout

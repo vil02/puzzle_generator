@@ -10,11 +10,12 @@ name: all_url_check
   schedule:
     - cron: '57 2,18 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   run_lychee:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout

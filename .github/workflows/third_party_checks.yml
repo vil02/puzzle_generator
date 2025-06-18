@@ -8,12 +8,13 @@ name: third_party_checks
       - master
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   generate_and_upload_coverage_data:
     name: generate_and_upload_coverage_data
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
