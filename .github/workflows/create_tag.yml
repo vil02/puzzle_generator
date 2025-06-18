@@ -7,11 +7,12 @@ name: create_tag
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   create_tag:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout

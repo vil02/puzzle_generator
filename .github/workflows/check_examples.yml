@@ -10,11 +10,12 @@ name: check_examples
   schedule:
     - cron: '33 */9 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   check_examples:
     runs-on: ${{matrix.os}}
-    permissions:
-      contents: read
     strategy:
       fail-fast: false
       matrix:

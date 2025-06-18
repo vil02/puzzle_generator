@@ -10,11 +10,12 @@ name: python_test
   schedule:
     - cron: '47 1 * * 1,3'
 
+permissions:
+  contents: read
+
 jobs:
   python_test:
     runs-on: ${{matrix.os}}
-    permissions:
-      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -48,8 +49,6 @@ jobs:
 
   check_examples:
     runs-on: ${{matrix.os}}
-    permissions:
-      contents: read
     strategy:
       fail-fast: false
       matrix:
