@@ -1,3 +1,3 @@
-FROM gitpod/workspace-python-3.12:2025-05-14-07-50-25
+FROM gitpod/workspace-python-3.12:2025-05-14-07-50-25@sha256:38c0f66416dfd287cf6386b8d18a7c9e838584503a235432dc3e0b8c3322b4fe
 
 USER gitpod
