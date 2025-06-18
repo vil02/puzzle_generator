@@ -30,9 +30,11 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Set up Poetry
+        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a # v1.4.1
+
+      - name: Install basic dependencies
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
           poetry install --with dev
 
       - name: Generate coverage data
