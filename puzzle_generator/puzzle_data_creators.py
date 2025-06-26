@@ -40,15 +40,22 @@ def _qa_list_and_hints_from_puzzle_with_hints(
     return qa_list, hints
 
 
+def _is_str_list(
+    in_list: (
+        list[str]
+        | typing.Sequence[tuple[str, str, typing.Callable[[str], str] | None] | str]
+    ),
+) -> typing.TypeGuard[list[str]]:
+    return isinstance(in_list, list) and all(isinstance(_, str) for _ in in_list)
+
+
 def extract_qa_list_and_hints(
     puzzle_description: (
         list[str]
         | typing.Sequence[tuple[str, str, typing.Callable[[str], str] | None] | str]
     ),
 ) -> tuple[list[str], list[typing.Callable[[str], str] | None]]:
-    if isinstance(puzzle_description, list) and all(
-        isinstance(_, str) for _ in puzzle_description
-    ):
+    if _is_str_list(puzzle_description):
         qa_list: list[str] = puzzle_description
         hints: list[typing.Callable[[str], str] | None] = []
     else:
