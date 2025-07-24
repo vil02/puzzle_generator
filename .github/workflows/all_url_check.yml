@@ -8,7 +8,7 @@ name: all_url_check
       - master
   pull_request:
   schedule:
-    - cron: '57 2,18 * * *'
+    - cron: '57 2 * * *'
 
 permissions:
   contents: read
