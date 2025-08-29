@@ -24,7 +24,7 @@ flake8-bugbear = "24.12.12"
 flake8-pytest-style = "2.1.0"
 isort = "6.0.1"
 ruff = "0.12.11"
-coverage = "7.10.5"
+coverage = "7.10.6"
 mypy = "1.17.1"
 pyright = {extras = ["nodejs"], version = "1.1.404"}
 bandit = "1.8.6"
