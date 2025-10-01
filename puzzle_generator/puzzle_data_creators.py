@@ -24,7 +24,7 @@ def _qa_list_and_hints_from_puzzle_with_hints(
         if isinstance(_, str):
             raise ValueError(
                 "In case of puzzle with hints, "
-                "all entires besides the last one "
+                "all entries besides the last one "
                 "have to be of the type "
                 "tuple[str, str, typing.Callable[[str], str] | None]"
             )
