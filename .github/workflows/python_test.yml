@@ -21,7 +21,7 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-        python-version: ['3.10', '3.12', '3.13']
+        python-version: ['3.10', 3.13]
         # Py3.14 is currently blocked by PyCQA/bandit#1288
 
     steps:
@@ -34,7 +34,6 @@ jobs:
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
           python-version: ${{matrix.python-version}}
-          allow-prereleases: true
 
       - name: Set up Poetry
         uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a # v1.4.1
@@ -58,7 +57,7 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-        python-version: ['3.10', '3.12', '3.14']
+        python-version: ['3.10', 3.14]
 
     steps:
       - name: Checkout
@@ -70,7 +69,6 @@ jobs:
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
           python-version: ${{matrix.python-version}}
-          allow-prereleases: true
 
       - name: Set up Poetry
         uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a # v1.4.1
