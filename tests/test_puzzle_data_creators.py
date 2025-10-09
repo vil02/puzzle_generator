@@ -111,7 +111,7 @@ def test_extract_qa_list_and_hints_raises_for_other_wrong_input() -> None:
     with pytest.raises(
         ValueError,
         match="In case of puzzle with hints, "
-        "all entires besides the last one "
+        "all entries besides the last one "
         "have to be of the type "
         "tuple[str, str, typing.Callable[[str], str] | None]",
     ):
