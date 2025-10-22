@@ -202,11 +202,13 @@ _CONFIGURATIONS = [
         "signature_params": {"digest": "sha3_512"},
     },
     {
+        "encoding": "base64",
         "encryption": "spiced",
         "signature_spices": [b"\0", b"\10"],
         "signature_params": {"digest": "sha3_256"},
         "scrypt_params": {"n": 2**5, "r": 16, "salt": b"testSalt!!!"},
     },
+    {"encoding": "base85"},
 ]
 
 
