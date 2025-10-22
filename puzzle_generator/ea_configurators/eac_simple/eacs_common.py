@@ -1,11 +1,10 @@
 import secrets
 
 from ... import bytes_utils as bu
-from ... import bytestr_utils as bsu
 from ... import puzzle_data_encryption as pde
 from ...encryption_algorithms.ea_simple import eas_common
 
-MODULES = ["base64", "hashlib", "hmac", "sys", "typing"]
+MODULES = ["hashlib", "hmac", "sys", "typing"]
 
 OBJECTS = [
     eas_common.sign_bytes,
@@ -13,7 +12,6 @@ OBJECTS = [
     eas_common.split_data_and_signature,
     eas_common.digest_size,
     eas_common.xor_bytes,
-    bsu.bytestr_to_bytes,
     bu.bytes_to_int,
     bu.split,
     pde.decrypt_data,
@@ -35,8 +33,8 @@ def signature_params(**kwargs):
     return kwargs.get("signature_params", {"digest": "sha512"})
 
 
-def scrypt_params_to_code_str(**kwargs) -> str:
+def scrypt_params_to_code_str(bu_configurator, **kwargs) -> str:
     pieces = [f'"{_k}":{_v}' for _k, _v in kwargs.items() if _k != "salt"]
-    salt_str = '"' + bsu.bytes_to_bytestr(kwargs["salt"]) + '"'
+    salt_str = '"' + bu_configurator.bytes_to_bytestr()(kwargs["salt"]) + '"'
     pieces.append(f'"salt":bytestr_to_bytes({salt_str})')
     return f"_SCRYPT_PARAMS = {{{','.join(pieces)}}}"

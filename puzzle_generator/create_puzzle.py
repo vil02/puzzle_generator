@@ -5,7 +5,7 @@ import typing
 
 import black
 
-from . import bytestr_utils, rp_configurators
+from . import bu_configurators, rp_configurators
 from .ea_configurators import ea_configurators
 from .puzzle_data_creators import (
     extract_qa_list_and_hints,
@@ -47,7 +47,9 @@ def _create_str(in_encrypted_puzzle, ea_configurator, rp_configurator) -> str:
     )
     question = _str_to_code(in_encrypted_puzzle[0], 78, '"""')
     rest_str = _str_to_code(
-        bytestr_utils.bytes_to_bytestr(in_encrypted_puzzle[1]), 78, '"'
+        ea_configurator.bu_configurator.bytes_to_bytestr()(in_encrypted_puzzle[1]),
+        78,
+        '"',
     )
 
     return (
@@ -76,9 +78,14 @@ def create(
     qa_list, hints = extract_qa_list_and_hints(puzzle_description)
 
     puzzle = question_answer_list_to_dict(qa_list)
-    ea_configurator = ea_configurators.get_ea_configurator(**kwargs)
+    ea_configurator = ea_configurators.get_ea_configurator(
+        bu_configurators.get_bu_configurator(kwargs.get("encoding", "base64")),
+        **{_k: _v for _k, _v in kwargs.items() if _k != "encoding"},
+    )
     encrypted_puzzle = encrypt_data(puzzle, ea_configurator.get_encrypt())
     res = _create_str(
-        encrypted_puzzle, ea_configurator, rp_configurators.get_rp_configurator(hints)
+        encrypted_puzzle,
+        ea_configurator,
+        rp_configurators.get_rp_configurator(hints),
     )
     return black.format_str(res, mode=black.FileMode())
