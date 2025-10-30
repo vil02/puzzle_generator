@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "puzzle-generator"
-version = "0.16.8"
+version = "0.17.0"
 description = "Generates python code representing a puzzle"
 authors = ["piotr.idzik <vil02_puzzle_generator@10g.pl>"]
 readme = "./puzzle_generator/README.md"
@@ -17,13 +17,13 @@ black = "25.9.0"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-coverage = "7.10.7"
-isort = "6.1.0"
+coverage = "7.11.0"
+isort = "7.3.0"
 mypy = "1.18.2"
 pylint = "4.0.1"
-pyright = {extras = ["nodejs"], version = "1.1.406"}
+pyright = {extras = ["nodejs"], version = "1.1.407"}
 pytest = "8.4.2"
-ruff = "0.14.0"
+ruff = "0.14.2"
 xenon = "0.9.3"
 
 [build-system]
