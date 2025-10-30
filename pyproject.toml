@@ -20,7 +20,7 @@ optional = true
 coverage = "7.11.0"
 isort = "7.0.0"
 mypy = "1.18.2"
-pylint = "4.0.1"
+pylint = "4.0.2"
 pyright = {extras = ["nodejs"], version = "1.1.407"}
 pytest = "8.4.2"
 ruff = "0.14.2"
