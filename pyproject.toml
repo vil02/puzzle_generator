@@ -17,11 +17,7 @@ black = "25.9.0"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-bandit = "1.8.6"
 coverage = "7.11.0"
-flake8 = "7.3.0"
-flake8-bugbear = "25.10.21"
-flake8-pytest-style = "2.2.0"
 isort = "7.0.0"
 mypy = "1.18.2"
 pylint = "4.0.2"
@@ -33,3 +29,73 @@ xenon = "0.9.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+select = [
+  "A",      # flake8-builtins
+  "AIR",    # Airflow
+  "ARG",    # flake8-unused-arguments
+  "ASYNC",  # flake8-async
+  "B",      # flake8-bugbear
+  "BLE",    # flake8-blind-except
+  "C4",     # flake8-comprehensions
+  "C90",    # McCabe cyclomatic complexity
+  "DJ",     # flake8-django
+  "DTZ",    # flake8-datetimez
+  "E",      # pycodestyle
+  "EXE",    # flake8-executable
+  "F",      # Pyflakes
+  "FA",     # flake8-future-annotations
+  "FAST",   # FastAPI
+  "FBT",    # flake8-boolean-trap
+  "FIX",    # flake8-fixme
+  "FLY",    # flynt
+  "FURB",   # refurb
+  "G",      # flake8-logging-format
+  "I",      # isort
+  "ICN",    # flake8-import-conventions
+  "INT",    # flake8-gettext
+  "ISC",    # flake8-implicit-str-concat
+  "LOG",    # flake8-logging
+  "N",      # pep8-naming
+  "NPY",    # NumPy-specific rules
+  "PD",     # pandas-vet
+  "PERF",   # Perflint
+  "PGH",    # pygrep-hooks
+  "PIE",    # flake8-pie
+  "PL",     # Pylint
+  "PT",     # flake8-pytest-style
+  "PTH",    # flake8-use-pathlib
+  "PYI",    # flake8-pyi
+  "RET",    # flake8-return
+  "RSE",    # flake8-raise
+  "SIM",    # flake8-simplify
+  "SLF",    # flake8-self
+  "SLOT",   # flake8-slots
+  "T10",    # flake8-debugger
+  "TC",     # flake8-type-checking
+  "TD",     # flake8-todos
+  "TID",    # flake8-tidy-imports
+  "UP",     # pyupgrade
+  "W",      # pycodestyle
+  "YTT",    # flake8-2020
+  # "ANN",  # flake8-annotations
+  # "COM",  # flake8-commas
+  # "CPY",  # flake8-copyright
+  # "D",    # pydocstyle
+  # "DOC",  # pydoclint
+  # "EM",   # flake8-errmsg
+  # "ERA",  # eradicate
+  # "INP",  # flake8-no-pep420
+  # "PLR091",  # Pylint Refactor just for max-args, max-branches, etc.
+  # "Q",    # flake8-quotes
+  # "RUF",  # Ruff-specific rules
+  # "S",    # flake8-bandit
+  # "T20",  # flake8-print
+  # "TRY",  # tryceratops
+]
+ignore = ["FLY002", "PTH123", "PYI024", "TID252", "UP018"]
+pylint.allow-magic-value-types = ["int", "str"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # allow tests to use assert statements
