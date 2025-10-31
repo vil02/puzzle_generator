@@ -27,7 +27,7 @@ mypy = "1.18.2"
 pylint = "4.0.2"
 pyright = {extras = ["nodejs"], version = "1.1.407"}
 pytest = "8.4.2"
-ruff = "0.14.2"
+ruff = "0.14.3"
 xenon = "0.9.3"
 
 [build-system]
