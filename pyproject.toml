@@ -23,7 +23,7 @@ flake8 = "7.3.0"
 flake8-bugbear = "25.10.21"
 flake8-pytest-style = "2.2.0"
 isort = "7.0.0"
-mypy = "1.18.2"
+mypy = "1.19.0"
 pylint = "4.0.3"
 pyright = {extras = ["nodejs"], version = "1.1.407"}
 pytest = "9.0.1"
