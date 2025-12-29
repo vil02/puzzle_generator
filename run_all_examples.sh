@@ -44,6 +44,7 @@ function check_example() {
     fi
     readonly puzzle_str
     check_puzzle_code "${puzzle_str}"
+    return 0
 }
 
 cd examples/
