@@ -9,7 +9,8 @@ name: Scorecard supply-chain security
       - master
   pull_request:
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   analysis:

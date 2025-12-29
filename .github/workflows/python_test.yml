@@ -10,11 +10,10 @@ name: python_test
   schedule:
     - cron: '47 1 * * 1'
 
-permissions:
-  contents: read
-
 jobs:
   python_test:
+    permissions:
+      contents: read
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
@@ -51,6 +50,8 @@ jobs:
           poetry run pytest
 
   check_examples:
+    permissions:
+      contents: read
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
