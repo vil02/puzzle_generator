@@ -10,6 +10,9 @@ name: python_test
   schedule:
     - cron: '47 1 * * 1'
 
+permissions:
+  contents: read
+
 jobs:
   python_test:
     permissions:
