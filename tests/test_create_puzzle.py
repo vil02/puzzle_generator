@@ -126,8 +126,7 @@ _NEGATIVE_PUZZLE_TCS = [
     _PuzzleTestCase(
         puzzle_description=_QA_LIST_2,
         input=["Wrong!"],
-        output=_MULTILINE_QUESTION
-        + """
+        output=_MULTILINE_QUESTION + """
 This is a wrong answer. Try again!
 """,
     ),
