@@ -11,7 +11,7 @@ keywords = ["puzzle-generation", "quiz-generation", "code-generation"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0.0"
-black = "25.12.0"
+black = "26.1.0"
 
 [tool.poetry.group.dev]
 optional = true
