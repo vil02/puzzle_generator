@@ -181,8 +181,7 @@ def _run_puzzle_str(
     in_puzzle: str, answers: list[str], in_puzzle_path: pathlib.Path
 ) -> subprocess.CompletedProcess[str]:
     _check_code_statically(in_puzzle)
-    with open(in_puzzle_path, "w", encoding="utf-8") as puzzle_file:
-        puzzle_file.write(in_puzzle)
+    in_puzzle_path.write_text(in_puzzle, encoding="utf-8")
     return _run_puzzle_file(in_puzzle_path, answers)
 
 
