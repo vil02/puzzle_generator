@@ -36,7 +36,7 @@ jobs:
 
       - name: Install puzzle-generator
         run: |
-          pip install puzzle-generator
+          pip install --only-binary :all: puzzle-generator
 
       - name: Run examples
         run: |
