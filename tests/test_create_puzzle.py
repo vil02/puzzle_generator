@@ -206,6 +206,11 @@ _CONFIGURATIONS = [
         "signature_params": {"digest": "sha3_256"},
         "scrypt_params": {"n": 2**5, "r": 16, "salt": b"testSalt!!!"},
     },
+    {"encoding": "base16"},
+    {"encoding": "base32"},
+    {"encoding": "base32hex"},
+    {"encoding": "standard_base64"},
+    {"encoding": "urlsafe_base64"},
     {"encoding": "base85"},
 ]
 
