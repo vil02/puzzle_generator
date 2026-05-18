@@ -1,10 +1,8 @@
-"""
-This file illustrates how one can reduce the output size
+"""This file illustrates how one can reduce the output size
 by using base85 encoding.
-
 The default encoding is base64.
+Note: base16 and base32 encoding can also be used, but they increase (not reduce) output size.
 """
-
 from puzzle_generator.create_puzzle import create
 
 _PUZZLE = [
