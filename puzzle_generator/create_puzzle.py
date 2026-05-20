@@ -1,11 +1,10 @@
 import importlib.metadata
 import inspect
-import textwrap
 import typing
 
 import black
 
-from . import bu_configurators, rp_configurators
+from . import bu_configurators, rp_configurators, string_to_code
 from .ea_configurators import ea_configurators
 from .puzzle_data_creators import (
     extract_qa_list_and_hints,
@@ -24,18 +23,6 @@ def _advertisement() -> str:
 """
 
 
-def _str_to_code(in_str: str, max_len: int, quotes: str) -> str:
-    return "\n".join(
-        quotes + line + quotes
-        for line in textwrap.wrap(
-            in_str,
-            width=max_len,
-            replace_whitespace=False,  # Preserves embedded whitespace like `\n`
-            drop_whitespace=False,  # Keeps leading/trailing spaces
-        )
-    )
-
-
 def _create_str(in_encrypted_puzzle, ea_configurator, rp_configurator) -> str:
     modules: str = (
         "\n".join("import " + _ for _ in ea_configurator.get_modules()) + "\n"
@@ -45,8 +32,8 @@ def _create_str(in_encrypted_puzzle, ea_configurator, rp_configurator) -> str:
         for _ in ea_configurator.get_needed_objects()
         + rp_configurator.get_needed_objects()
     )
-    question = _str_to_code(in_encrypted_puzzle[0], 78, '"""')
-    rest_str = _str_to_code(
+    question = string_to_code.string_to_code(in_encrypted_puzzle[0], 78, '"""')
+    rest_str = string_to_code.string_to_code(
         ea_configurator.bu_configurator.bytes_to_bytestr()(in_encrypted_puzzle[1]),
         78,
         '"',
