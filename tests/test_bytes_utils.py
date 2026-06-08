@@ -54,3 +54,20 @@ def test_split_and_join(in_str: str, in_bytes: bytes) -> None:
     res_str, res_bytes = bu.split(bu.join(in_str, in_bytes))
     assert res_str == in_str
     assert res_bytes == in_bytes
+
+
+@pytest.mark.parametrize(
+    ("in_str", "in_index", "in_bytes"),
+    itertools.product(
+        utils.STRS, [0, 4, 18, 7234987238948788782477287483838], utils.BYTES_LIST
+    ),
+)
+def test_split_with_hints_and_join_with_hints(
+    in_str: str, in_index: int, in_bytes: bytes
+) -> None:
+    res_str, res_index, res_bytes = bu.split_with_hints(
+        bu.join_with_hints(in_str, in_index, in_bytes)
+    )
+    assert res_str == in_str
+    assert res_index == in_index
+    assert res_bytes == in_bytes

@@ -1,7 +1,6 @@
 import secrets
 
 from ... import bytes_utils as bu
-from ... import puzzle_data_encryption as pde
 from ...encryption_algorithms.ea_simple import eas_common
 
 MODULES = ["hashlib", "hmac", "sys", "typing"]
@@ -13,8 +12,6 @@ OBJECTS = [
     eas_common.digest_size,
     eas_common.xor_bytes,
     bu.bytes_to_int,
-    bu.split,
-    pde.decrypt_data,
 ]
 
 

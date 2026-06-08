@@ -28,15 +28,33 @@ def bytes_to_int(in_bytes: bytes) -> int:
     return int.from_bytes(in_bytes[1:], byteorder=BYTEORDER)
 
 
+def join_bytes_blocks(bytes_a: bytes, bytes_b: bytes) -> bytes:
+    return int_to_bytes(len(bytes_a)) + bytes_a + bytes_b
+
+
 def join(in_str: str, in_bytes: bytes) -> bytes:
-    str_as_bytes = in_str.encode()
-    return int_to_bytes(len(str_as_bytes)) + str_as_bytes + in_bytes
+    return join_bytes_blocks(in_str.encode(), in_bytes)
+
+
+def split_bytes_blocks(in_bytes: bytes) -> tuple[bytes, bytes]:
+    end_of_length = int(in_bytes[0]) + 1
+    bytes_a_len = bytes_to_int(in_bytes[:end_of_length])
+    end_of_bytes_a = end_of_length + bytes_a_len
+    bytes_a = in_bytes[end_of_length:end_of_bytes_a]
+    bytes_b = in_bytes[end_of_bytes_a:]
+    return bytes_a, bytes_b
 
 
 def split(in_bytes: bytes) -> tuple[str, bytes]:
-    end_of_length = int(in_bytes[0]) + 1
-    str_as_bytes_len = bytes_to_int(in_bytes[:end_of_length])
-    end_of_str = end_of_length + str_as_bytes_len
-    str_as_bytes = in_bytes[end_of_length:end_of_str]
-    res_bytes = in_bytes[end_of_str:]
+    str_as_bytes, res_bytes = split_bytes_blocks(in_bytes)
     return str_as_bytes.decode(), res_bytes
+
+
+def join_with_hints(in_str: str, in_index: int, in_bytes: bytes) -> bytes:
+    return join(in_str, join_bytes_blocks(int_to_bytes(in_index), in_bytes))
+
+
+def split_with_hints(in_bytes: bytes) -> tuple[str, int, bytes]:
+    res_str, index_and_res_bytes = split(in_bytes)
+    index_as_bytes, res_bytes = split_bytes_blocks(index_and_res_bytes)
+    return res_str, bytes_to_int(index_as_bytes), res_bytes
