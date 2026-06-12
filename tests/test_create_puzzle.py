@@ -11,7 +11,6 @@ import pytest
 import puzzle_generator.create_puzzle as cp
 import puzzle_generator.puzzle_data_creators as pdc
 import puzzle_generator.puzzle_data_encryption as pde
-import puzzle_generator.rp_configurators as rpc
 import puzzle_generator.run_puzzle as rp
 
 from . import utils
@@ -129,6 +128,14 @@ _NEGATIVE_PUZZLE_TCS = [
         output=_MULTILINE_QUESTION + """
 This is a wrong answer. Try again!
 """,
+    ),
+]
+
+_NEGATIVE_PUZZLE_TCS_WITH_HINTS = [
+    _PuzzleTestCase(
+        puzzle_description=_PUZZLE_WITH_HINTS,
+        input=["5", "what?"],
+        output="What is 2+3?\nQuestion 2?\nThis is a wrong answer. Try again!\n",
     ),
 ]
 
@@ -256,6 +263,12 @@ def _get_input_simulator(answers: list[str]) -> typing.Callable[[], str]:
     return _input_simulator
 
 
+def _question_answer_list_to_dict(qa_list: list[str]):
+    sq_list, final_str = pdc.puzzle_description_to_sq_list(qa_list)
+    _, hint_to_index = pdc.hints_info(sq_list)
+    return pdc.sq_list_to_dict(sq_list, final_str, hint_to_index)
+
+
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
 @pytest.mark.parametrize("puzzle_tc", _POSITIVE_PUZZLE_TCS_NO_HINTS)
 def test_run_puzzle_all_good_answers(
@@ -265,11 +278,16 @@ def test_run_puzzle_all_good_answers(
     decrypt: typing.Callable[[bytes, bytes], bytes | None],
 ) -> None:
     encrypted_puzzle = pde.encrypt_data(
-        pdc.question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
+        _question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
     )
     rp.run_puzzle(encrypted_puzzle, decrypt, _get_input_simulator(puzzle_tc.input))
     captured = capsys.readouterr()
     assert captured.out == puzzle_tc.output
+
+
+def _assert_run_puzzle_failed(exc_info) -> None:
+    assert exc_info.type is SystemExit
+    assert exc_info.value.code == 1
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
@@ -278,7 +296,7 @@ def test_run_puzzle_wrong_answers(
     capsys, puzzle_tc: _PuzzleTestCase, encrypt, decrypt
 ) -> None:
     encrypted_puzzle = pde.encrypt_data(
-        pdc.question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
+        _question_answer_list_to_dict(puzzle_tc.puzzle_description), encrypt
     )
     with pytest.raises(SystemExit) as exc_info:
         rp.run_puzzle(
@@ -288,8 +306,22 @@ def test_run_puzzle_wrong_answers(
         )
     captured = capsys.readouterr()
     assert captured.out == puzzle_tc.output
-    assert exc_info.type is SystemExit
-    assert exc_info.value.code == 1
+    _assert_run_puzzle_failed(exc_info)
+
+
+def _is_encrypted_puzzle_with_hints(
+    encrypted_puzzle: tuple[str, int, bytes] | tuple[str, bytes],
+) -> typing.TypeGuard[tuple[str, int, bytes]]:
+    if not isinstance(encrypted_puzzle, tuple):
+        return False
+    if len(encrypted_puzzle) != 3:
+        return False
+    first_str, first_hint_index, rest = encrypted_puzzle
+    return (
+        isinstance(first_str, str)
+        and isinstance(first_hint_index, int)
+        and isinstance(rest, bytes)
+    )
 
 
 @pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
@@ -300,15 +332,42 @@ def test_run_puzzle_with_hints_all_good_answers(
     encrypt: typing.Callable[[bytes, bytes], bytes],
     decrypt: typing.Callable[[bytes, bytes], bytes | None],
 ) -> None:
-    qa_list, hints = pdc.extract_qa_list_and_hints(puzzle_tc.puzzle_description)
-    encrypted_puzzle = pde.encrypt_data(
-        pdc.question_answer_list_to_dict(qa_list), encrypt
-    )
+    sq_list, final_str = cp.puzzle_description_to_sq_list(puzzle_tc.puzzle_description)
+    unique_hints, hint_to_index = cp.hints_info(sq_list)
+    encrypted_puzzle = cp.encrypt_puzzle(sq_list, final_str, hint_to_index, encrypt)
+    assert _is_encrypted_puzzle_with_hints(encrypted_puzzle)
+    assert unique_hints is not None
     rp.run_puzzle_with_hints(
         encrypted_puzzle,
+        unique_hints,
         decrypt,
         _get_input_simulator(puzzle_tc.input),
-        rpc.get_proc_answer(hints),
     )
     captured = capsys.readouterr()
     assert captured.out == puzzle_tc.output
+
+
+@pytest.mark.parametrize(("encrypt", "decrypt"), utils.ENCRYPT_DECRYPT_PAIRS)
+@pytest.mark.parametrize("puzzle_tc", _NEGATIVE_PUZZLE_TCS_WITH_HINTS)
+def test_run_puzzle_with_hints_wrong_answers(
+    capsys,
+    puzzle_tc: _PuzzleTestCase,
+    encrypt: typing.Callable[[bytes, bytes], bytes],
+    decrypt: typing.Callable[[bytes, bytes], bytes | None],
+) -> None:
+    sq_list, final_str = cp.puzzle_description_to_sq_list(puzzle_tc.puzzle_description)
+    unique_hints, hint_to_index = cp.hints_info(sq_list)
+    encrypted_puzzle = cp.encrypt_puzzle(sq_list, final_str, hint_to_index, encrypt)
+    assert _is_encrypted_puzzle_with_hints(encrypted_puzzle)
+    assert unique_hints is not None
+
+    with pytest.raises(SystemExit) as exc_info:
+        rp.run_puzzle_with_hints(
+            encrypted_puzzle,
+            unique_hints,
+            decrypt,
+            _get_input_simulator(puzzle_tc.input),
+        )
+    captured = capsys.readouterr()
+    assert captured.out == puzzle_tc.output
+    _assert_run_puzzle_failed(exc_info)
