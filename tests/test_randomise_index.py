@@ -1,6 +1,6 @@
 import pytest
 
-import puzzle_generator.randomise_index as ri
+import puzzle_generator._randomise_index as ri
 
 
 @pytest.mark.parametrize(

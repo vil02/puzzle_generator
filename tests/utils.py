@@ -2,7 +2,7 @@ import itertools
 import string
 import typing
 
-from puzzle_generator.encryption_algorithms.ea_simple import eas_simple, eas_spiced
+from puzzle_generator._encryption_algorithms.ea_simple import eas_simple, eas_spiced
 
 STRS = [
     "",

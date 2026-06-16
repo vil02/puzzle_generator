@@ -2,13 +2,13 @@ import types
 
 import pytest
 
-import puzzle_generator.bytestr_utils.bu_b16 as bu16
-import puzzle_generator.bytestr_utils.bu_b32 as bu32
-import puzzle_generator.bytestr_utils.bu_b32hex as bu32hex
-import puzzle_generator.bytestr_utils.bu_b64 as bu64
-import puzzle_generator.bytestr_utils.bu_b85 as bu85
-import puzzle_generator.bytestr_utils.bu_standard_b64 as standard_bu64
-import puzzle_generator.bytestr_utils.bu_urlsafe_b64 as urlsafe_bu64
+import puzzle_generator._bytestr_utils.bu_b16 as bu16
+import puzzle_generator._bytestr_utils.bu_b32 as bu32
+import puzzle_generator._bytestr_utils.bu_b32hex as bu32hex
+import puzzle_generator._bytestr_utils.bu_b64 as bu64
+import puzzle_generator._bytestr_utils.bu_b85 as bu85
+import puzzle_generator._bytestr_utils.bu_standard_b64 as standard_bu64
+import puzzle_generator._bytestr_utils.bu_urlsafe_b64 as urlsafe_bu64
 
 from . import utils
 

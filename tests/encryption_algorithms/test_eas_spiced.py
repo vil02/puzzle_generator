@@ -1,6 +1,6 @@
 import pytest
 
-from puzzle_generator.encryption_algorithms.ea_simple import eas_spiced
+from puzzle_generator._encryption_algorithms.ea_simple import eas_spiced
 
 
 def test_must_be_nonempty_raises() -> None:

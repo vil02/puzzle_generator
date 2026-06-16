@@ -4,14 +4,14 @@ import typing
 
 import black
 
-from . import bu_configurators, rp_configurators
-from .ea_configurators import ea_configurators
-from .puzzle_data_creators import (
+from . import _bu_configurators, _rp_configurators
+from ._ea_configurators import ea_configurators
+from ._puzzle_data_creators import (
     hints_info,
     puzzle_description_to_sq_list,
     sq_list_to_dict,
 )
-from .puzzle_data_encryption import encrypt_data, encrypt_data_with_hints
+from ._puzzle_data_encryption import encrypt_data, encrypt_data_with_hints
 
 
 def _advertisement() -> str:
@@ -80,7 +80,7 @@ def create(
     unique_hints, hint_to_index = hints_info(sq_list)
 
     ea_configurator = ea_configurators.get_ea_configurator(
-        bu_configurators.get_bu_configurator(kwargs.get("encoding", "base64")),
+        _bu_configurators.get_bu_configurator(kwargs.get("encoding", "base64")),
         **{_k: _v for _k, _v in kwargs.items() if _k != "encoding"},
     )
 
@@ -90,6 +90,6 @@ def create(
     res = _create_str(
         encrypted_puzzle,
         ea_configurator,
-        rp_configurators.get_rp_configurator(unique_hints),
+        _rp_configurators.get_rp_configurator(unique_hints),
     )
     return black.format_str(res, mode=black.FileMode())

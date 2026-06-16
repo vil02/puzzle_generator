@@ -2,8 +2,8 @@ import re
 
 import pytest
 
-from puzzle_generator import bu_configurators as buc
-from puzzle_generator.ea_configurators.eac_simple import eacs_simple, eacs_spiced
+from puzzle_generator import _bu_configurators as buc
+from puzzle_generator._ea_configurators.eac_simple import eacs_simple, eacs_spiced
 
 
 @pytest.mark.parametrize(

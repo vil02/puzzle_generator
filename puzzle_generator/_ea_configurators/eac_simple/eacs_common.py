@@ -1,7 +1,7 @@
 import secrets
 
-from ... import bytes_utils as bu
-from ...encryption_algorithms.ea_simple import eas_common
+from ... import _bytes_utils as bu
+from ..._encryption_algorithms.ea_simple import eas_common
 
 MODULES = ["hashlib", "hmac", "sys", "typing"]
 

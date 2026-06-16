@@ -2,7 +2,7 @@ import itertools
 
 import pytest
 
-import puzzle_generator.bytes_utils as bu
+import puzzle_generator._bytes_utils as bu
 
 from . import utils
 

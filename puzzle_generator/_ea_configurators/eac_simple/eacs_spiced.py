@@ -1,7 +1,7 @@
 import secrets
 import typing
 
-from ...encryption_algorithms.ea_simple import eas_spiced
+from ..._encryption_algorithms.ea_simple import eas_spiced
 from ..check_kwargs import check_kwargs
 from . import eacs_common as eacs
 

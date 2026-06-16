@@ -1,6 +1,6 @@
 import typing
 
-from ...encryption_algorithms.ea_simple import eas_simple
+from ..._encryption_algorithms.ea_simple import eas_simple
 from ..check_kwargs import check_kwargs
 from . import eacs_common as eacs
 

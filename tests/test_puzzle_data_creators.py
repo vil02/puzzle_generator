@@ -2,7 +2,7 @@ import typing
 
 import pytest
 
-import puzzle_generator.puzzle_data_creators as pdc
+import puzzle_generator._puzzle_data_creators as pdc
 
 
 @pytest.mark.parametrize(
