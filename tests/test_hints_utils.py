@@ -2,7 +2,7 @@ import typing
 
 import pytest
 
-import puzzle_generator.hints_utils as hu
+import puzzle_generator._hints_utils as hu
 
 
 def fun_a(in_str: str) -> str:

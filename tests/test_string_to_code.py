@@ -1,6 +1,6 @@
 import pytest
 
-import puzzle_generator.string_to_code as stc
+import puzzle_generator._string_to_code as stc
 
 
 @pytest.mark.parametrize(

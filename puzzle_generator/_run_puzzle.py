@@ -1,8 +1,8 @@
 import sys
 import typing
 
-from .puzzle_data_encryption import decrypt_data, decrypt_data_with_hints
-from .randomise_index import reduce_index
+from ._puzzle_data_encryption import decrypt_data, decrypt_data_with_hints
+from ._randomise_index import reduce_index
 
 
 def run_puzzle(

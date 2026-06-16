@@ -2,7 +2,7 @@ import typing
 
 import pytest
 
-import puzzle_generator.puzzle_data_encryption as pde
+import puzzle_generator._puzzle_data_encryption as pde
 
 from . import utils
 

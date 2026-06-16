@@ -1,7 +1,7 @@
 import typing
 
-from . import hints_utils as hu
-from . import randomise_index as ri
+from . import _hints_utils as hu
+from . import _randomise_index as ri
 
 
 def _is_str_list(

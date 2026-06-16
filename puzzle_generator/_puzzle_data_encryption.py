@@ -1,6 +1,6 @@
 import typing
 
-from .bytes_utils import join, join_with_hints, split, split_with_hints
+from ._bytes_utils import join, join_with_hints, split, split_with_hints
 
 
 def encrypt_data(
