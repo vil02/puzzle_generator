@@ -7,7 +7,7 @@ def encrypt_data(
     in_data, in_encrypt: typing.Callable[[bytes, bytes], bytes]
 ) -> tuple[str, bytes]:
     if list(in_data.keys()) == ["str"]:
-        return in_data["str"], bytes()
+        return in_data["str"], b""
     tmp = encrypt_data(in_data["rest"], in_encrypt)
     rest = join(tmp[0], tmp[1])
     encrypted = in_encrypt(rest, in_data["pass"].encode())
@@ -29,7 +29,7 @@ def encrypt_data_with_hints(
     in_data, in_encrypt: typing.Callable[[bytes, bytes], bytes]
 ) -> tuple[str, int, bytes]:
     if list(in_data.keys()) == ["str"]:
-        return in_data["str"], 0, bytes()
+        return in_data["str"], 0, b""
     tmp = encrypt_data_with_hints(in_data["rest"], in_encrypt)
     rest = join_with_hints(tmp[0], tmp[1], tmp[2])
     encrypted = in_encrypt(rest, in_data["pass"].encode())

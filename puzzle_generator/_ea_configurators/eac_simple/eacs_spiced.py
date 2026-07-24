@@ -74,8 +74,12 @@ class EacsSpiced:
             "_SIGNATURE_SPICES, "
             "_SCRYPT_PARAMS, _SIGNATURE_PARAMS)"
         )
-        return "\n".join(
-            [proc_spices, signature_spices, _scrypt_params, _signature_params, decrypt]
+        return (
+            f"{proc_spices}\n"
+            f"{signature_spices}\n"
+            f"{_scrypt_params}\n"
+            f"{_signature_params}\n"
+            f"{decrypt}"
         )
 
     @property
