@@ -34,7 +34,7 @@ class EacsSimple:
             self.bu_configurator, **self._scrypt_params
         )
         _signature_params = "_SIGNATURE_PARAMS = " + repr(self._signature_params)
-        decrypt: str = "_DECRYPT = get_decrypt(_SCRYPT_PARAMS, _SIGNATURE_PARAMS)"
+        decrypt: str = "_decrypt = get_decrypt(_SCRYPT_PARAMS, _SIGNATURE_PARAMS)"
         return f"{_scrypt_params}\n{_signature_params}\n{decrypt}"
 
     @property

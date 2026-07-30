@@ -23,7 +23,7 @@ class _NoHintsConfigurator:
         return f"_PUZZLE = ({question}, bytestr_to_bytes({rest_str}))"
 
     def call(self) -> str:
-        return "run_puzzle(_PUZZLE, _DECRYPT, input)"
+        return "run_puzzle(_PUZZLE, _decrypt, input)"
 
 
 def _get_name(in_fun: typing.Callable[[str], str] | None) -> str:
@@ -64,7 +64,7 @@ class _WithHintsConfigurator:
         )
 
     def call(self) -> str:
-        return "run_puzzle_with_hints(_PUZZLE, _HINTS, _DECRYPT, input)"
+        return "run_puzzle_with_hints(_PUZZLE, _HINTS, _decrypt, input)"
 
 
 def get_rp_configurator(unique_hints: list[None | typing.Callable[[str], str]] | None):
