@@ -69,7 +69,7 @@ class EacsSpiced:
         )
         _signature_params = "_SIGNATURE_PARAMS = " + repr(self._signature_params)
         decrypt: str = (
-            "_DECRYPT = get_decrypt("
+            "_decrypt = get_decrypt("
             "_PROC_SPICES, "
             "_SIGNATURE_SPICES, "
             "_SCRYPT_PARAMS, _SIGNATURE_PARAMS)"
