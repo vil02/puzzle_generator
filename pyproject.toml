@@ -10,7 +10,7 @@ repository = "https://github.com/vil02/puzzle_generator"
 keywords = ["puzzle-generation", "quiz-generation", "code-generation"]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0.0"
+python = ">=3.11,<4.0.0"
 black = "26.10.1"
 
 [tool.poetry.group.dev]
