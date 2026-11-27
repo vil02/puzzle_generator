@@ -2,7 +2,6 @@
 name: third_party_checks
 
 'on':
-  workflow_dispatch:
   push:
     branches:
       - master
